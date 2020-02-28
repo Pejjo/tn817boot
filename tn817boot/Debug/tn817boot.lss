@@ -1,0 +1,2434 @@
+
+tn817boot.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00803e00  00803e00  00000dc3  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000a38  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bootloader   000002f6  00000a38  00000a38  00000acc  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .bss          00000020  00803e00  00803e00  00000dc2  2**0
+                  ALLOC
+  4 .eeprom       00000001  00810000  00810000  00000dc2  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 .comment      00000030  00000000  00000000  00000dc3  2**0
+                  CONTENTS, READONLY
+  6 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000df4  2**2
+                  CONTENTS, READONLY
+  7 .debug_aranges 00000278  00000000  00000000  00000e30  2**3
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_info   000032de  00000000  00000000  000010a8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_abbrev 00001e66  00000000  00000000  00004386  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_line   000014e9  00000000  00000000  000061ec  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_frame  000006f4  00000000  00000000  000076d8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_str    0000170d  00000000  00000000  00007dcc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_loc    00000cf6  00000000  00000000  000094d9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_ranges 000001d8  00000000  00000000  0000a1cf  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	55 c0       	rjmp	.+170    	; 0xac <__ctors_end>
+   2:	71 c0       	rjmp	.+226    	; 0xe6 <__bad_interrupt>
+   4:	70 c0       	rjmp	.+224    	; 0xe6 <__bad_interrupt>
+   6:	6f c0       	rjmp	.+222    	; 0xe6 <__bad_interrupt>
+   8:	6e c0       	rjmp	.+220    	; 0xe6 <__bad_interrupt>
+   a:	6d c0       	rjmp	.+218    	; 0xe6 <__bad_interrupt>
+   c:	6c c0       	rjmp	.+216    	; 0xe6 <__bad_interrupt>
+   e:	6b c0       	rjmp	.+214    	; 0xe6 <__bad_interrupt>
+  10:	6a c0       	rjmp	.+212    	; 0xe6 <__bad_interrupt>
+  12:	69 c0       	rjmp	.+210    	; 0xe6 <__bad_interrupt>
+  14:	68 c0       	rjmp	.+208    	; 0xe6 <__bad_interrupt>
+  16:	67 c0       	rjmp	.+206    	; 0xe6 <__bad_interrupt>
+  18:	66 c0       	rjmp	.+204    	; 0xe6 <__bad_interrupt>
+  1a:	65 c0       	rjmp	.+202    	; 0xe6 <__bad_interrupt>
+  1c:	64 c0       	rjmp	.+200    	; 0xe6 <__bad_interrupt>
+  1e:	63 c0       	rjmp	.+198    	; 0xe6 <__bad_interrupt>
+  20:	62 c0       	rjmp	.+196    	; 0xe6 <__bad_interrupt>
+  22:	61 c0       	rjmp	.+194    	; 0xe6 <__bad_interrupt>
+  24:	60 c0       	rjmp	.+192    	; 0xe6 <__bad_interrupt>
+  26:	5f c0       	rjmp	.+190    	; 0xe6 <__bad_interrupt>
+  28:	5e c0       	rjmp	.+188    	; 0xe6 <__bad_interrupt>
+  2a:	5d c0       	rjmp	.+186    	; 0xe6 <__bad_interrupt>
+  2c:	5c c0       	rjmp	.+184    	; 0xe6 <__bad_interrupt>
+  2e:	5b c0       	rjmp	.+182    	; 0xe6 <__bad_interrupt>
+  30:	5a c0       	rjmp	.+180    	; 0xe6 <__bad_interrupt>
+  32:	59 c0       	rjmp	.+178    	; 0xe6 <__bad_interrupt>
+
+00000034 <start>:
+
+extern void main(void);
+
+__attribute__((naked, section(".vectors"))) void start(void)
+{
+	asm volatile("ldi r16, %0" ::"i"(RAMEND & 0xff));
+  34:	0f ef       	ldi	r16, 0xFF	; 255
+	asm volatile("out __SP_L__, r16");
+  36:	0d bf       	out	0x3d, r16	; 61
+	asm volatile("ldi r16, %0" ::"i"(RAMEND >> 8));
+  38:	0f e3       	ldi	r16, 0x3F	; 63
+	asm volatile("out __SP_H__, r16");
+  3a:	0e bf       	out	0x3e, r16	; 62
+	asm volatile("clr __zero_reg__"); // r1 set to 0
+  3c:	11 24       	eor	r1, r1
+	main();
+  3e:	0e 94 e9 03 	call	0x7d2	; 0x7d2 <main>
+  42:	18 01       	movw	r2, r16
+  44:	30 01       	movw	r6, r0
+  46:	aa 01       	movw	r20, r20
+  48:	aa 01       	movw	r20, r20
+  4a:	36 01       	movw	r6, r12
+  4c:	aa 01       	movw	r20, r20
+  4e:	aa 01       	movw	r20, r20
+  50:	aa 01       	movw	r20, r20
+  52:	aa 01       	movw	r20, r20
+  54:	aa 01       	movw	r20, r20
+  56:	aa 01       	movw	r20, r20
+  58:	aa 01       	movw	r20, r20
+  5a:	aa 01       	movw	r20, r20
+  5c:	aa 01       	movw	r20, r20
+  5e:	aa 01       	movw	r20, r20
+  60:	aa 01       	movw	r20, r20
+  62:	a2 01       	movw	r20, r4
+  64:	aa 01       	movw	r20, r20
+  66:	aa 01       	movw	r20, r20
+  68:	aa 01       	movw	r20, r20
+  6a:	3c 01       	movw	r6, r24
+  6c:	4e 01       	movw	r8, r28
+  6e:	aa 01       	movw	r20, r20
+  70:	aa 01       	movw	r20, r20
+  72:	aa 01       	movw	r20, r20
+  74:	aa 01       	movw	r20, r20
+  76:	aa 01       	movw	r20, r20
+  78:	aa 01       	movw	r20, r20
+  7a:	aa 01       	movw	r20, r20
+  7c:	aa 01       	movw	r20, r20
+  7e:	aa 01       	movw	r20, r20
+  80:	aa 01       	movw	r20, r20
+  82:	aa 01       	movw	r20, r20
+  84:	aa 01       	movw	r20, r20
+  86:	aa 01       	movw	r20, r20
+  88:	57 01       	movw	r10, r14
+  8a:	aa 01       	movw	r20, r20
+  8c:	aa 01       	movw	r20, r20
+  8e:	aa 01       	movw	r20, r20
+  90:	aa 01       	movw	r20, r20
+  92:	aa 01       	movw	r20, r20
+  94:	aa 01       	movw	r20, r20
+  96:	aa 01       	movw	r20, r20
+  98:	aa 01       	movw	r20, r20
+  9a:	aa 01       	movw	r20, r20
+  9c:	aa 01       	movw	r20, r20
+  9e:	aa 01       	movw	r20, r20
+  a0:	aa 01       	movw	r20, r20
+  a2:	aa 01       	movw	r20, r20
+  a4:	aa 01       	movw	r20, r20
+  a6:	aa 01       	movw	r20, r20
+  a8:	77 01       	movw	r14, r14
+  aa:	95 01       	movw	r18, r10
+
+000000ac <__ctors_end>:
+  ac:	11 24       	eor	r1, r1
+  ae:	1f be       	out	0x3f, r1	; 63
+  b0:	cf ef       	ldi	r28, 0xFF	; 255
+  b2:	cd bf       	out	0x3d, r28	; 61
+  b4:	df e3       	ldi	r29, 0x3F	; 63
+  b6:	de bf       	out	0x3e, r29	; 62
+
+000000b8 <__do_copy_data>:
+  b8:	1e e3       	ldi	r17, 0x3E	; 62
+  ba:	a0 e0       	ldi	r26, 0x00	; 0
+  bc:	be e3       	ldi	r27, 0x3E	; 62
+  be:	ee e2       	ldi	r30, 0x2E	; 46
+  c0:	fd e0       	ldi	r31, 0x0D	; 13
+  c2:	02 c0       	rjmp	.+4      	; 0xc8 <__do_copy_data+0x10>
+  c4:	05 90       	lpm	r0, Z+
+  c6:	0d 92       	st	X+, r0
+  c8:	a0 30       	cpi	r26, 0x00	; 0
+  ca:	b1 07       	cpc	r27, r17
+  cc:	d9 f7       	brne	.-10     	; 0xc4 <__do_copy_data+0xc>
+
+000000ce <__do_clear_bss>:
+  ce:	2e e3       	ldi	r18, 0x3E	; 62
+  d0:	a0 e0       	ldi	r26, 0x00	; 0
+  d2:	be e3       	ldi	r27, 0x3E	; 62
+  d4:	01 c0       	rjmp	.+2      	; 0xd8 <.do_clear_bss_start>
+
+000000d6 <.do_clear_bss_loop>:
+  d6:	1d 92       	st	X+, r1
+
+000000d8 <.do_clear_bss_start>:
+  d8:	a0 32       	cpi	r26, 0x20	; 32
+  da:	b2 07       	cpc	r27, r18
+  dc:	e1 f7       	brne	.-8      	; 0xd6 <.do_clear_bss_loop>
+  de:	0e 94 e9 03 	call	0x7d2	; 0x7d2 <main>
+  e2:	0c 94 1a 05 	jmp	0xa34	; 0xa34 <_exit>
+
+000000e6 <__bad_interrupt>:
+  e6:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000ea <init_bootloader>:
+void BlockRead(unsigned int size, unsigned char mem, native_pointer_t *address);
+void purge(uint8_t n);
+void check_crc_eop();
+
+void init_bootloader()
+{
+  ea:	cf 93       	push	r28
+  ec:	df 93       	push	r29
+  ee:	cd b7       	in	r28, 0x3d	; 61
+  f0:	de b7       	in	r29, 0x3e	; 62
+	device_init();
+  f2:	0e 94 b1 02 	call	0x562	; 0x562 <device_init>
+}
+  f6:	df 91       	pop	r29
+  f8:	cf 91       	pop	r28
+  fa:	08 95       	ret
+
+000000fc <bootloader>:
+uint8_t EEMEM user_byte;
+
+uint8_t buffer[32];
+
+void bootloader(void)
+{
+  fc:	0f 93       	push	r16
+  fe:	1f 93       	push	r17
+ 100:	cf 93       	push	r28
+ 102:	df 93       	push	r29
+ 104:	cd b7       	in	r28, 0x3d	; 61
+ 106:	de b7       	in	r29, 0x3e	; 62
+ 108:	60 97       	sbiw	r28, 0x10	; 16
+ 10a:	cd bf       	out	0x3d, r28	; 61
+ 10c:	de bf       	out	0x3e, r29	; 62
+	unsigned char    val;
+	unsigned char    parameter;
+	uint8_t			 node_addr;
+	uint8_t			 skip_loader;
+
+	node_addr=FLASH_0_read_eeprom_byte(&user_byte+EEAD_CRIS)&0x0F; //0-16, default 16
+ 10e:	80 e0       	ldi	r24, 0x00	; 0
+ 110:	9f ef       	ldi	r25, 0xFF	; 255
+ 112:	0e 94 88 04 	call	0x910	; 0x910 <FLASH_0_read_eeprom_byte>
+ 116:	8f 70       	andi	r24, 0x0F	; 15
+ 118:	8c 83       	std	Y+4, r24	; 0x04
+	skip_loader=FLASH_0_read_eeprom_byte(&user_byte+EEAD_SKLD); //If 0xFF, run bootloader without hwc.
+ 11a:	81 e0       	ldi	r24, 0x01	; 1
+ 11c:	9f ef       	ldi	r25, 0xFF	; 255
+ 11e:	0e 94 88 04 	call	0x910	; 0x910 <FLASH_0_read_eeprom_byte>
+ 122:	8d 83       	std	Y+5, r24	; 0x05
+
+	//	device_init();
+	#define LED_R	0x10
+	#define LED_G	0x20
+	PORTA.DIR=LED_R|LED_G;
+ 124:	80 e0       	ldi	r24, 0x00	; 0
+ 126:	94 e0       	ldi	r25, 0x04	; 4
+ 128:	20 e3       	ldi	r18, 0x30	; 48
+ 12a:	fc 01       	movw	r30, r24
+ 12c:	20 83       	st	Z, r18
+	PORTA.OUTCLR=LED_R|LED_G;
+ 12e:	80 e0       	ldi	r24, 0x00	; 0
+ 130:	94 e0       	ldi	r25, 0x04	; 4
+ 132:	20 e3       	ldi	r18, 0x30	; 48
+ 134:	fc 01       	movw	r30, r24
+ 136:	26 83       	std	Z+6, r18	; 0x06
+	
+	// Switch to Autolin mode. Await start.
+	USART0.CTRLB=0xC6;
+ 138:	80 e0       	ldi	r24, 0x00	; 0
+ 13a:	98 e0       	ldi	r25, 0x08	; 8
+ 13c:	26 ec       	ldi	r18, 0xC6	; 198
+ 13e:	fc 01       	movw	r30, r24
+ 140:	26 83       	std	Z+6, r18	; 0x06
+		
+	for (uint8_t x=(node_addr<<1); x>0; x--) // 2 loops for each address
+ 142:	8c 81       	ldd	r24, Y+4	; 0x04
+ 144:	88 0f       	add	r24, r24
+ 146:	89 83       	std	Y+1, r24	; 0x01
+ 148:	23 c0       	rjmp	.+70     	; 0x190 <bootloader+0x94>
+	{
+		for (uint8_t cs=0; cs<25; cs++) // Delay 0.5s
+ 14a:	1a 82       	std	Y+2, r1	; 0x02
+ 14c:	0d c0       	rjmp	.+26     	; 0x168 <bootloader+0x6c>
+ 14e:	8a ef       	ldi	r24, 0xFA	; 250
+ 150:	99 e1       	ldi	r25, 0x19	; 25
+ 152:	8b 87       	std	Y+11, r24	; 0x0b
+ 154:	9c 87       	std	Y+12, r25	; 0x0c
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+ 156:	8b 85       	ldd	r24, Y+11	; 0x0b
+ 158:	9c 85       	ldd	r25, Y+12	; 0x0c
+ 15a:	01 97       	sbiw	r24, 0x01	; 1
+ 15c:	f1 f7       	brne	.-4      	; 0x15a <bootloader+0x5e>
+ 15e:	8b 87       	std	Y+11, r24	; 0x0b
+ 160:	9c 87       	std	Y+12, r25	; 0x0c
+ 162:	8a 81       	ldd	r24, Y+2	; 0x02
+ 164:	8f 5f       	subi	r24, 0xFF	; 255
+ 166:	8a 83       	std	Y+2, r24	; 0x02
+ 168:	8a 81       	ldd	r24, Y+2	; 0x02
+ 16a:	89 31       	cpi	r24, 0x19	; 25
+ 16c:	80 f3       	brcs	.-32     	; 0x14e <bootloader+0x52>
+		{
+			_delay_loop_2((10*F_CPU/(1000*4)));
+		}
+		if (skip_loader==0xFF)
+ 16e:	8d 81       	ldd	r24, Y+5	; 0x05
+ 170:	8f 3f       	cpi	r24, 0xFF	; 255
+ 172:	31 f4       	brne	.+12     	; 0x180 <bootloader+0x84>
+		{
+			PORTA.OUTTGL=LED_G;			
+ 174:	80 e0       	ldi	r24, 0x00	; 0
+ 176:	94 e0       	ldi	r25, 0x04	; 4
+ 178:	20 e2       	ldi	r18, 0x20	; 32
+ 17a:	fc 01       	movw	r30, r24
+ 17c:	27 83       	std	Z+7, r18	; 0x07
+ 17e:	05 c0       	rjmp	.+10     	; 0x18a <bootloader+0x8e>
+		}
+		else
+		{
+			PORTA.OUTTGL=LED_R;
+ 180:	80 e0       	ldi	r24, 0x00	; 0
+ 182:	94 e0       	ldi	r25, 0x04	; 4
+ 184:	20 e1       	ldi	r18, 0x10	; 16
+ 186:	fc 01       	movw	r30, r24
+ 188:	27 83       	std	Z+7, r18	; 0x07
+	PORTA.OUTCLR=LED_R|LED_G;
+	
+	// Switch to Autolin mode. Await start.
+	USART0.CTRLB=0xC6;
+		
+	for (uint8_t x=(node_addr<<1); x>0; x--) // 2 loops for each address
+ 18a:	89 81       	ldd	r24, Y+1	; 0x01
+ 18c:	81 50       	subi	r24, 0x01	; 1
+ 18e:	89 83       	std	Y+1, r24	; 0x01
+ 190:	89 81       	ldd	r24, Y+1	; 0x01
+ 192:	88 23       	and	r24, r24
+ 194:	d1 f6       	brne	.-76     	; 0x14a <bootloader+0x4e>
+		else
+		{
+			PORTA.OUTTGL=LED_R;
+		}
+	}
+	for (uint8_t cs=0; cs<50; cs++) // Delay 0.5s
+ 196:	1b 82       	std	Y+3, r1	; 0x03
+ 198:	0d c0       	rjmp	.+26     	; 0x1b4 <bootloader+0xb8>
+ 19a:	8a ef       	ldi	r24, 0xFA	; 250
+ 19c:	99 e1       	ldi	r25, 0x19	; 25
+ 19e:	8d 87       	std	Y+13, r24	; 0x0d
+ 1a0:	9e 87       	std	Y+14, r25	; 0x0e
+ 1a2:	8d 85       	ldd	r24, Y+13	; 0x0d
+ 1a4:	9e 85       	ldd	r25, Y+14	; 0x0e
+ 1a6:	01 97       	sbiw	r24, 0x01	; 1
+ 1a8:	f1 f7       	brne	.-4      	; 0x1a6 <bootloader+0xaa>
+ 1aa:	8d 87       	std	Y+13, r24	; 0x0d
+ 1ac:	9e 87       	std	Y+14, r25	; 0x0e
+ 1ae:	8b 81       	ldd	r24, Y+3	; 0x03
+ 1b0:	8f 5f       	subi	r24, 0xFF	; 255
+ 1b2:	8b 83       	std	Y+3, r24	; 0x03
+ 1b4:	8b 81       	ldd	r24, Y+3	; 0x03
+ 1b6:	82 33       	cpi	r24, 0x32	; 50
+ 1b8:	80 f3       	brcs	.-32     	; 0x19a <bootloader+0x9e>
+	{
+		_delay_loop_2((10*F_CPU/(1000*4)));
+	}
+
+	/* Branch to bootloader or application code? */
+	if ((USART0.RXDATAH==0x80)&&(USART0.RXDATAL==0x7D)&&(skip_loader==0xFF))
+ 1ba:	80 e0       	ldi	r24, 0x00	; 0
+ 1bc:	98 e0       	ldi	r25, 0x08	; 8
+ 1be:	fc 01       	movw	r30, r24
+ 1c0:	81 81       	ldd	r24, Z+1	; 0x01
+ 1c2:	80 38       	cpi	r24, 0x80	; 128
+ 1c4:	09 f0       	breq	.+2      	; 0x1c8 <bootloader+0xcc>
+ 1c6:	cd c0       	rjmp	.+410    	; 0x362 <bootloader+0x266>
+ 1c8:	80 e0       	ldi	r24, 0x00	; 0
+ 1ca:	98 e0       	ldi	r25, 0x08	; 8
+ 1cc:	fc 01       	movw	r30, r24
+ 1ce:	80 81       	ld	r24, Z
+ 1d0:	8d 37       	cpi	r24, 0x7D	; 125
+ 1d2:	09 f0       	breq	.+2      	; 0x1d6 <bootloader+0xda>
+ 1d4:	c6 c0       	rjmp	.+396    	; 0x362 <bootloader+0x266>
+ 1d6:	8d 81       	ldd	r24, Y+5	; 0x05
+ 1d8:	8f 3f       	cpi	r24, 0xFF	; 255
+ 1da:	09 f0       	breq	.+2      	; 0x1de <bootloader+0xe2>
+ 1dc:	c2 c0       	rjmp	.+388    	; 0x362 <bootloader+0x266>
+	{
+		PORTA.OUTSET=LED_R|LED_G;
+ 1de:	80 e0       	ldi	r24, 0x00	; 0
+ 1e0:	94 e0       	ldi	r25, 0x04	; 4
+ 1e2:	20 e3       	ldi	r18, 0x30	; 48
+ 1e4:	fc 01       	movw	r30, r24
+ 1e6:	25 83       	std	Z+5, r18	; 0x05
+		wdt_reset();   
+ 1e8:	a8 95       	wdr
+		_PROTECTED_WRITE(WDT_CTRLA, WDT_PERIOD_8KCLK_gc);
+ 1ea:	88 ed       	ldi	r24, 0xD8	; 216
+ 1ec:	9b e0       	ldi	r25, 0x0B	; 11
+ 1ee:	84 bf       	out	0x34, r24	; 52
+ 1f0:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <__TEXT_REGION_LENGTH__+0x700100>
+		
+		// Switch back to uart mode. 
+		USART0.CTRLB=0xC0;
+ 1f4:	80 e0       	ldi	r24, 0x00	; 0
+ 1f6:	98 e0       	ldi	r25, 0x08	; 8
+ 1f8:	20 ec       	ldi	r18, 0xC0	; 192
+ 1fa:	fc 01       	movw	r30, r24
+ 1fc:	26 83       	std	Z+6, r18	; 0x06
+		
+		/* Main loop */
+		for (;;) {
+			val = USART_0_read(); // Wait for command character.
+ 1fe:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 202:	8e 83       	std	Y+6, r24	; 0x06
+			switch (val) {
+ 204:	8e 81       	ldd	r24, Y+6	; 0x06
+ 206:	88 2f       	mov	r24, r24
+ 208:	90 e0       	ldi	r25, 0x00	; 0
+ 20a:	09 2e       	mov	r0, r25
+ 20c:	00 0c       	add	r0, r0
+ 20e:	aa 0b       	sbc	r26, r26
+ 210:	bb 0b       	sbc	r27, r27
+ 212:	41 e4       	ldi	r20, 0x41	; 65
+ 214:	50 e0       	ldi	r21, 0x00	; 0
+ 216:	24 e3       	ldi	r18, 0x34	; 52
+ 218:	30 e0       	ldi	r19, 0x00	; 0
+ 21a:	84 1b       	sub	r24, r20
+ 21c:	95 0b       	sbc	r25, r21
+ 21e:	28 17       	cp	r18, r24
+ 220:	39 07       	cpc	r19, r25
+ 222:	08 f4       	brcc	.+2      	; 0x226 <bootloader+0x12a>
+ 224:	97 c0       	rjmp	.+302    	; 0x354 <bootloader+0x258>
+ 226:	8f 5d       	subi	r24, 0xDF	; 223
+ 228:	9f 4f       	sbci	r25, 0xFF	; 255
+ 22a:	fc 01       	movw	r30, r24
+ 22c:	0c 94 0b 05 	jmp	0xa16	; 0xa16 <__tablejump2__>
+			case Cmnd_STK_GET_PARAMETER:
+				parameter = USART_0_read();
+ 230:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 234:	8f 83       	std	Y+7, r24	; 0x07
+				check_crc_eop();
+ 236:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+
+				if (parameter == Parm_STK_SW_MINOR) {
+ 23a:	8f 81       	ldd	r24, Y+7	; 0x07
+ 23c:	82 38       	cpi	r24, 0x82	; 130
+ 23e:	21 f4       	brne	.+8      	; 0x248 <bootloader+0x14c>
+					USART_0_write(BOOTLOADER_VERSION & 0xFF);
+ 240:	80 e0       	ldi	r24, 0x00	; 0
+ 242:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+ 246:	0b c0       	rjmp	.+22     	; 0x25e <bootloader+0x162>
+				} else if (parameter == Parm_STK_SW_MAJOR) {
+ 248:	8f 81       	ldd	r24, Y+7	; 0x07
+ 24a:	81 38       	cpi	r24, 0x81	; 129
+ 24c:	21 f4       	brne	.+8      	; 0x256 <bootloader+0x15a>
+					USART_0_write(BOOTLOADER_VERSION >> 8);
+ 24e:	80 e1       	ldi	r24, 0x10	; 16
+ 250:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+ 254:	04 c0       	rjmp	.+8      	; 0x25e <bootloader+0x162>
+				} else {
+					USART_0_write(0); // Dummy reply
+ 256:	80 e0       	ldi	r24, 0x00	; 0
+ 258:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+				}
+				break;
+ 25c:	7e c0       	rjmp	.+252    	; 0x35a <bootloader+0x25e>
+ 25e:	7d c0       	rjmp	.+250    	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_SET_DEVICE:
+				purge(20);
+ 260:	84 e1       	ldi	r24, 0x14	; 20
+ 262:	0e 94 6e 02 	call	0x4dc	; 0x4dc <purge>
+				check_crc_eop();
+ 266:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				break;
+ 26a:	77 c0       	rjmp	.+238    	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_SET_DEVICE_EXT:
+				purge(5);
+ 26c:	85 e0       	ldi	r24, 0x05	; 5
+ 26e:	0e 94 6e 02 	call	0x4dc	; 0x4dc <purge>
+				check_crc_eop();
+ 272:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				break;
+ 276:	71 c0       	rjmp	.+226    	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_LOAD_ADDRESS:
+				address = USART_0_read() | (USART_0_read() << 8); // Read address low and high byte.
+ 278:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 27c:	08 2f       	mov	r16, r24
+ 27e:	10 e0       	ldi	r17, 0x00	; 0
+ 280:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 284:	88 2f       	mov	r24, r24
+ 286:	90 e0       	ldi	r25, 0x00	; 0
+ 288:	98 2f       	mov	r25, r24
+ 28a:	88 27       	eor	r24, r24
+ 28c:	80 2b       	or	r24, r16
+ 28e:	91 2b       	or	r25, r17
+ 290:	8f 87       	std	Y+15, r24	; 0x0f
+ 292:	98 8b       	std	Y+16, r25	; 0x10
+				check_crc_eop();
+ 294:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				wdt_reset();
+ 298:	a8 95       	wdr
+				break;
+ 29a:	5f c0       	rjmp	.+190    	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_UNIVERSAL:
+				purge(4);
+ 29c:	84 e0       	ldi	r24, 0x04	; 4
+ 29e:	0e 94 6e 02 	call	0x4dc	; 0x4dc <purge>
+				check_crc_eop();
+ 2a2:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				USART_0_write(0); // Dummy reply
+ 2a6:	80 e0       	ldi	r24, 0x00	; 0
+ 2a8:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+				break;
+ 2ac:	56 c0       	rjmp	.+172    	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_PROG_PAGE:
+				length  = (USART_0_read() << 8) | USART_0_read(); // Read length high and low byte.
+ 2ae:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 2b2:	88 2f       	mov	r24, r24
+ 2b4:	90 e0       	ldi	r25, 0x00	; 0
+ 2b6:	18 2f       	mov	r17, r24
+ 2b8:	00 27       	eor	r16, r16
+ 2ba:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 2be:	88 2f       	mov	r24, r24
+ 2c0:	90 e0       	ldi	r25, 0x00	; 0
+ 2c2:	80 2b       	or	r24, r16
+ 2c4:	91 2b       	or	r25, r17
+ 2c6:	88 87       	std	Y+8, r24	; 0x08
+ 2c8:	99 87       	std	Y+9, r25	; 0x09
+				memtype = USART_0_read();
+ 2ca:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 2ce:	8a 87       	std	Y+10, r24	; 0x0a
+				wdt_reset();
+ 2d0:	a8 95       	wdr
+				BlockLoad(buffer, memtype, length, &address);
+ 2d2:	9e 01       	movw	r18, r28
+ 2d4:	21 5f       	subi	r18, 0xF1	; 241
+ 2d6:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2d8:	88 85       	ldd	r24, Y+8	; 0x08
+ 2da:	99 85       	ldd	r25, Y+9	; 0x09
+ 2dc:	ac 01       	movw	r20, r24
+ 2de:	6a 85       	ldd	r22, Y+10	; 0x0a
+ 2e0:	80 e0       	ldi	r24, 0x00	; 0
+ 2e2:	9e e3       	ldi	r25, 0x3E	; 62
+ 2e4:	0e 94 b2 01 	call	0x364	; 0x364 <BlockLoad>
+				check_crc_eop();
+ 2e8:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				break;
+ 2ec:	36 c0       	rjmp	.+108    	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_READ_PAGE:
+				length  = (USART_0_read() << 8) | USART_0_read(); // Read length high and low byte.
+ 2ee:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 2f2:	88 2f       	mov	r24, r24
+ 2f4:	90 e0       	ldi	r25, 0x00	; 0
+ 2f6:	18 2f       	mov	r17, r24
+ 2f8:	00 27       	eor	r16, r16
+ 2fa:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 2fe:	88 2f       	mov	r24, r24
+ 300:	90 e0       	ldi	r25, 0x00	; 0
+ 302:	80 2b       	or	r24, r16
+ 304:	91 2b       	or	r25, r17
+ 306:	88 87       	std	Y+8, r24	; 0x08
+ 308:	99 87       	std	Y+9, r25	; 0x09
+				memtype = USART_0_read();
+ 30a:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 30e:	8a 87       	std	Y+10, r24	; 0x0a
+				check_crc_eop();
+ 310:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				wdt_reset();
+ 314:	a8 95       	wdr
+				BlockRead(length, memtype, &address);
+ 316:	9e 01       	movw	r18, r28
+ 318:	21 5f       	subi	r18, 0xF1	; 241
+ 31a:	3f 4f       	sbci	r19, 0xFF	; 255
+ 31c:	88 85       	ldd	r24, Y+8	; 0x08
+ 31e:	99 85       	ldd	r25, Y+9	; 0x09
+ 320:	a9 01       	movw	r20, r18
+ 322:	6a 85       	ldd	r22, Y+10	; 0x0a
+ 324:	0e 94 15 02 	call	0x42a	; 0x42a <BlockRead>
+				break;
+ 328:	18 c0       	rjmp	.+48     	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_READ_SIGN:
+				check_crc_eop();
+ 32a:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				USART_0_write(SIGNATURE_BYTE_1);
+ 32e:	8e e1       	ldi	r24, 0x1E	; 30
+ 330:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+				USART_0_write(SIGNATURE_BYTE_2);
+ 334:	83 e9       	ldi	r24, 0x93	; 147
+ 336:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+				USART_0_write(SIGNATURE_BYTE_3);
+ 33a:	81 e2       	ldi	r24, 0x21	; 33
+ 33c:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+				wdt_reset();
+ 340:	a8 95       	wdr
+				break;
+ 342:	0b c0       	rjmp	.+22     	; 0x35a <bootloader+0x25e>
+
+			case Cmnd_STK_LEAVE_PROGMODE:
+				check_crc_eop();
+ 344:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				USART_0_write(Resp_STK_OK);
+ 348:	80 e1       	ldi	r24, 0x10	; 16
+ 34a:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+				reset();
+ 34e:	0e 94 b8 02 	call	0x570	; 0x570 <reset>
+				break;
+ 352:	03 c0       	rjmp	.+6      	; 0x35a <bootloader+0x25e>
+
+			default:
+				check_crc_eop();
+ 354:	0e 94 80 02 	call	0x500	; 0x500 <check_crc_eop>
+				break;
+ 358:	00 00       	nop
+
+			} // End of switch-case
+
+			// All commands returns an OK response
+			USART_0_write(Resp_STK_OK);
+ 35a:	80 e1       	ldi	r24, 0x10	; 16
+ 35c:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+
+		} // end for()
+ 360:	4e cf       	rjmp	.-356    	; 0x1fe <bootloader+0x102>
+
+	} // end if()
+while(1);
+ 362:	ff cf       	rjmp	.-2      	; 0x362 <bootloader+0x266>
+
+00000364 <BlockLoad>:
+		;
+
+} // end: bootloader()
+
+void BlockLoad(uint8_t buffer[], uint8_t mem, uint16_t size, native_pointer_t *address)
+{
+ 364:	cf 93       	push	r28
+ 366:	df 93       	push	r29
+ 368:	cd b7       	in	r28, 0x3d	; 61
+ 36a:	de b7       	in	r29, 0x3e	; 62
+ 36c:	2a 97       	sbiw	r28, 0x0a	; 10
+ 36e:	cd bf       	out	0x3d, r28	; 61
+ 370:	de bf       	out	0x3e, r29	; 62
+ 372:	8c 83       	std	Y+4, r24	; 0x04
+ 374:	9d 83       	std	Y+5, r25	; 0x05
+ 376:	6e 83       	std	Y+6, r22	; 0x06
+ 378:	4f 83       	std	Y+7, r20	; 0x07
+ 37a:	58 87       	std	Y+8, r21	; 0x08
+ 37c:	29 87       	std	Y+9, r18	; 0x09
+ 37e:	3a 87       	std	Y+10, r19	; 0x0a
+		*address = *address + size;
+		return;
+	}
+
+	// Flash memory type.
+	else if (mem == 'F') {        // NOTE: For flash programming, 'address' is given in words.
+ 380:	8e 81       	ldd	r24, Y+6	; 0x06
+ 382:	86 34       	cpi	r24, 0x46	; 70
+ 384:	09 f0       	breq	.+2      	; 0x388 <BlockLoad+0x24>
+ 386:	4b c0       	rjmp	.+150    	; 0x41e <__LOCK_REGION_LENGTH__+0x1e>
+		(*address) <<= 1;         // Convert address to bytes temporarily.
+ 388:	89 85       	ldd	r24, Y+9	; 0x09
+ 38a:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 38c:	fc 01       	movw	r30, r24
+ 38e:	80 81       	ld	r24, Z
+ 390:	91 81       	ldd	r25, Z+1	; 0x01
+ 392:	9c 01       	movw	r18, r24
+ 394:	22 0f       	add	r18, r18
+ 396:	33 1f       	adc	r19, r19
+ 398:	89 85       	ldd	r24, Y+9	; 0x09
+ 39a:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 39c:	fc 01       	movw	r30, r24
+ 39e:	20 83       	st	Z, r18
+ 3a0:	31 83       	std	Z+1, r19	; 0x01
+		tempaddress = (*address); // Store address in page.
+ 3a2:	89 85       	ldd	r24, Y+9	; 0x09
+ 3a4:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 3a6:	fc 01       	movw	r30, r24
+ 3a8:	80 81       	ld	r24, Z
+ 3aa:	91 81       	ldd	r25, Z+1	; 0x01
+ 3ac:	8a 83       	std	Y+2, r24	; 0x02
+ 3ae:	9b 83       	std	Y+3, r25	; 0x03
+
+		for (i = 0; i < size; i++) {
+ 3b0:	19 82       	std	Y+1, r1	; 0x01
+ 3b2:	11 c0       	rjmp	.+34     	; 0x3d6 <BlockLoad+0x72>
+			/* Programmer always writes complete pages, so finalize parameter is set to false. */
+			FLASH_0_write_flash_stream(tempaddress + i, USART_0_read(), false);
+ 3b4:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 3b8:	58 2f       	mov	r21, r24
+ 3ba:	89 81       	ldd	r24, Y+1	; 0x01
+ 3bc:	28 2f       	mov	r18, r24
+ 3be:	30 e0       	ldi	r19, 0x00	; 0
+ 3c0:	8a 81       	ldd	r24, Y+2	; 0x02
+ 3c2:	9b 81       	ldd	r25, Y+3	; 0x03
+ 3c4:	82 0f       	add	r24, r18
+ 3c6:	93 1f       	adc	r25, r19
+ 3c8:	40 e0       	ldi	r20, 0x00	; 0
+ 3ca:	65 2f       	mov	r22, r21
+ 3cc:	0e 94 5f 06 	call	0xcbe	; 0xcbe <FLASH_0_write_flash_stream>
+	// Flash memory type.
+	else if (mem == 'F') {        // NOTE: For flash programming, 'address' is given in words.
+		(*address) <<= 1;         // Convert address to bytes temporarily.
+		tempaddress = (*address); // Store address in page.
+
+		for (i = 0; i < size; i++) {
+ 3d0:	89 81       	ldd	r24, Y+1	; 0x01
+ 3d2:	8f 5f       	subi	r24, 0xFF	; 255
+ 3d4:	89 83       	std	Y+1, r24	; 0x01
+ 3d6:	89 81       	ldd	r24, Y+1	; 0x01
+ 3d8:	28 2f       	mov	r18, r24
+ 3da:	30 e0       	ldi	r19, 0x00	; 0
+ 3dc:	8f 81       	ldd	r24, Y+7	; 0x07
+ 3de:	98 85       	ldd	r25, Y+8	; 0x08
+ 3e0:	28 17       	cp	r18, r24
+ 3e2:	39 07       	cpc	r19, r25
+ 3e4:	38 f3       	brcs	.-50     	; 0x3b4 <BlockLoad+0x50>
+			/* Programmer always writes complete pages, so finalize parameter is set to false. */
+			FLASH_0_write_flash_stream(tempaddress + i, USART_0_read(), false);
+		}
+
+		*address = *address + size;
+ 3e6:	89 85       	ldd	r24, Y+9	; 0x09
+ 3e8:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 3ea:	fc 01       	movw	r30, r24
+ 3ec:	20 81       	ld	r18, Z
+ 3ee:	31 81       	ldd	r19, Z+1	; 0x01
+ 3f0:	8f 81       	ldd	r24, Y+7	; 0x07
+ 3f2:	98 85       	ldd	r25, Y+8	; 0x08
+ 3f4:	28 0f       	add	r18, r24
+ 3f6:	39 1f       	adc	r19, r25
+ 3f8:	89 85       	ldd	r24, Y+9	; 0x09
+ 3fa:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 3fc:	fc 01       	movw	r30, r24
+ 3fe:	20 83       	st	Z, r18
+ 400:	31 83       	std	Z+1, r19	; 0x01
+		(*address) >>= 1; // Convert address back to Flash words again.
+ 402:	89 85       	ldd	r24, Y+9	; 0x09
+ 404:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 406:	fc 01       	movw	r30, r24
+ 408:	80 81       	ld	r24, Z
+ 40a:	91 81       	ldd	r25, Z+1	; 0x01
+ 40c:	9c 01       	movw	r18, r24
+ 40e:	36 95       	lsr	r19
+ 410:	27 95       	ror	r18
+ 412:	89 85       	ldd	r24, Y+9	; 0x09
+ 414:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 416:	fc 01       	movw	r30, r24
+ 418:	20 83       	st	Z, r18
+ 41a:	31 83       	std	Z+1, r19	; 0x01
+		return;
+ 41c:	00 00       	nop
+	}
+}
+ 41e:	2a 96       	adiw	r28, 0x0a	; 10
+ 420:	cd bf       	out	0x3d, r28	; 61
+ 422:	de bf       	out	0x3e, r29	; 62
+ 424:	df 91       	pop	r29
+ 426:	cf 91       	pop	r28
+ 428:	08 95       	ret
+
+0000042a <BlockRead>:
+
+void BlockRead(unsigned int size, unsigned char mem, native_pointer_t *address)
+{
+ 42a:	cf 93       	push	r28
+ 42c:	df 93       	push	r29
+ 42e:	cd b7       	in	r28, 0x3d	; 61
+ 430:	de b7       	in	r29, 0x3e	; 62
+ 432:	25 97       	sbiw	r28, 0x05	; 5
+ 434:	cd bf       	out	0x3d, r28	; 61
+ 436:	de bf       	out	0x3e, r29	; 62
+ 438:	89 83       	std	Y+1, r24	; 0x01
+ 43a:	9a 83       	std	Y+2, r25	; 0x02
+ 43c:	6b 83       	std	Y+3, r22	; 0x03
+ 43e:	4c 83       	std	Y+4, r20	; 0x04
+ 440:	5d 83       	std	Y+5, r21	; 0x05
+			size--;       // Decrease number of bytes to read
+		} while (size);   // Repeat until all block has been read
+	}
+
+	// Flash memory type.
+	else if (mem == 'F') {
+ 442:	8b 81       	ldd	r24, Y+3	; 0x03
+ 444:	86 34       	cpi	r24, 0x46	; 70
+ 446:	09 f0       	breq	.+2      	; 0x44a <BlockRead+0x20>
+ 448:	43 c0       	rjmp	.+134    	; 0x4d0 <BlockRead+0xa6>
+		(*address) <<= 1; // Convert address to bytes temporarily.
+ 44a:	8c 81       	ldd	r24, Y+4	; 0x04
+ 44c:	9d 81       	ldd	r25, Y+5	; 0x05
+ 44e:	fc 01       	movw	r30, r24
+ 450:	80 81       	ld	r24, Z
+ 452:	91 81       	ldd	r25, Z+1	; 0x01
+ 454:	9c 01       	movw	r18, r24
+ 456:	22 0f       	add	r18, r18
+ 458:	33 1f       	adc	r19, r19
+ 45a:	8c 81       	ldd	r24, Y+4	; 0x04
+ 45c:	9d 81       	ldd	r25, Y+5	; 0x05
+ 45e:	fc 01       	movw	r30, r24
+ 460:	20 83       	st	Z, r18
+ 462:	31 83       	std	Z+1, r19	; 0x01
+
+		do {
+			USART_0_write(FLASH_0_read_flash_byte(*address));
+ 464:	8c 81       	ldd	r24, Y+4	; 0x04
+ 466:	9d 81       	ldd	r25, Y+5	; 0x05
+ 468:	fc 01       	movw	r30, r24
+ 46a:	80 81       	ld	r24, Z
+ 46c:	91 81       	ldd	r25, Z+1	; 0x01
+ 46e:	0e 94 1c 05 	call	0xa38	; 0xa38 <_etext>
+ 472:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+
+			USART_0_write(FLASH_0_read_flash_byte((*address + 1)));
+ 476:	8c 81       	ldd	r24, Y+4	; 0x04
+ 478:	9d 81       	ldd	r25, Y+5	; 0x05
+ 47a:	fc 01       	movw	r30, r24
+ 47c:	80 81       	ld	r24, Z
+ 47e:	91 81       	ldd	r25, Z+1	; 0x01
+ 480:	01 96       	adiw	r24, 0x01	; 1
+ 482:	0e 94 1c 05 	call	0xa38	; 0xa38 <_etext>
+ 486:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+			(*address) += 2; // Select next word in memory.
+ 48a:	8c 81       	ldd	r24, Y+4	; 0x04
+ 48c:	9d 81       	ldd	r25, Y+5	; 0x05
+ 48e:	fc 01       	movw	r30, r24
+ 490:	80 81       	ld	r24, Z
+ 492:	91 81       	ldd	r25, Z+1	; 0x01
+ 494:	9c 01       	movw	r18, r24
+ 496:	2e 5f       	subi	r18, 0xFE	; 254
+ 498:	3f 4f       	sbci	r19, 0xFF	; 255
+ 49a:	8c 81       	ldd	r24, Y+4	; 0x04
+ 49c:	9d 81       	ldd	r25, Y+5	; 0x05
+ 49e:	fc 01       	movw	r30, r24
+ 4a0:	20 83       	st	Z, r18
+ 4a2:	31 83       	std	Z+1, r19	; 0x01
+			size -= 2;       // Subtract two bytes from number of bytes to read
+ 4a4:	89 81       	ldd	r24, Y+1	; 0x01
+ 4a6:	9a 81       	ldd	r25, Y+2	; 0x02
+ 4a8:	02 97       	sbiw	r24, 0x02	; 2
+ 4aa:	89 83       	std	Y+1, r24	; 0x01
+ 4ac:	9a 83       	std	Y+2, r25	; 0x02
+		} while (size);      // Repeat until all block has been read
+ 4ae:	89 81       	ldd	r24, Y+1	; 0x01
+ 4b0:	9a 81       	ldd	r25, Y+2	; 0x02
+ 4b2:	89 2b       	or	r24, r25
+ 4b4:	b9 f6       	brne	.-82     	; 0x464 <BlockRead+0x3a>
+
+		(*address) >>= 1; // Convert address back to Flash words again.
+ 4b6:	8c 81       	ldd	r24, Y+4	; 0x04
+ 4b8:	9d 81       	ldd	r25, Y+5	; 0x05
+ 4ba:	fc 01       	movw	r30, r24
+ 4bc:	80 81       	ld	r24, Z
+ 4be:	91 81       	ldd	r25, Z+1	; 0x01
+ 4c0:	9c 01       	movw	r18, r24
+ 4c2:	36 95       	lsr	r19
+ 4c4:	27 95       	ror	r18
+ 4c6:	8c 81       	ldd	r24, Y+4	; 0x04
+ 4c8:	9d 81       	ldd	r25, Y+5	; 0x05
+ 4ca:	fc 01       	movw	r30, r24
+ 4cc:	20 83       	st	Z, r18
+ 4ce:	31 83       	std	Z+1, r19	; 0x01
+	}
+}
+ 4d0:	25 96       	adiw	r28, 0x05	; 5
+ 4d2:	cd bf       	out	0x3d, r28	; 61
+ 4d4:	de bf       	out	0x3e, r29	; 62
+ 4d6:	df 91       	pop	r29
+ 4d8:	cf 91       	pop	r28
+ 4da:	08 95       	ret
+
+000004dc <purge>:
+
+void purge(uint8_t n)
+{
+ 4dc:	cf 93       	push	r28
+ 4de:	df 93       	push	r29
+ 4e0:	1f 92       	push	r1
+ 4e2:	cd b7       	in	r28, 0x3d	; 61
+ 4e4:	de b7       	in	r29, 0x3e	; 62
+ 4e6:	89 83       	std	Y+1, r24	; 0x01
+	do {
+		USART_0_read();
+ 4e8:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+	} while (--n);
+ 4ec:	89 81       	ldd	r24, Y+1	; 0x01
+ 4ee:	81 50       	subi	r24, 0x01	; 1
+ 4f0:	89 83       	std	Y+1, r24	; 0x01
+ 4f2:	89 81       	ldd	r24, Y+1	; 0x01
+ 4f4:	88 23       	and	r24, r24
+ 4f6:	c1 f7       	brne	.-16     	; 0x4e8 <purge+0xc>
+}
+ 4f8:	0f 90       	pop	r0
+ 4fa:	df 91       	pop	r29
+ 4fc:	cf 91       	pop	r28
+ 4fe:	08 95       	ret
+
+00000500 <check_crc_eop>:
+
+void check_crc_eop()
+{
+ 500:	cf 93       	push	r28
+ 502:	df 93       	push	r29
+ 504:	cd b7       	in	r28, 0x3d	; 61
+ 506:	de b7       	in	r29, 0x3e	; 62
+	if (USART_0_read() == Sync_CRC_EOP)
+ 508:	0e 94 b9 04 	call	0x972	; 0x972 <USART_0_read>
+ 50c:	80 32       	cpi	r24, 0x20	; 32
+ 50e:	49 f4       	brne	.+18     	; 0x522 <check_crc_eop+0x22>
+	{
+		USART_0_write(Resp_STK_INSYNC);
+ 510:	84 e1       	ldi	r24, 0x14	; 20
+ 512:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+		PORTA.OUTSET=0x10;
+ 516:	80 e0       	ldi	r24, 0x00	; 0
+ 518:	94 e0       	ldi	r25, 0x04	; 4
+ 51a:	20 e1       	ldi	r18, 0x10	; 16
+ 51c:	fc 01       	movw	r30, r24
+ 51e:	25 83       	std	Z+5, r18	; 0x05
+ 520:	08 c0       	rjmp	.+16     	; 0x532 <check_crc_eop+0x32>
+	}
+	else
+	{
+		USART_0_write(Resp_STK_NOSYNC);
+ 522:	85 e1       	ldi	r24, 0x15	; 21
+ 524:	0e 94 cb 04 	call	0x996	; 0x996 <USART_0_write>
+		PORTA.OUTCLR=0x20;
+ 528:	80 e0       	ldi	r24, 0x00	; 0
+ 52a:	94 e0       	ldi	r25, 0x04	; 4
+ 52c:	20 e2       	ldi	r18, 0x20	; 32
+ 52e:	fc 01       	movw	r30, r24
+ 530:	26 83       	std	Z+6, r18	; 0x06
+	}
+}
+ 532:	df 91       	pop	r29
+ 534:	cf 91       	pop	r28
+ 536:	08 95       	ret
+
+00000538 <ccp_write_io>:
+}
+
+void call_application()
+{
+	((void (*)(void))(BOOTSIZE >> 1))();
+}
+ 538:	cf 93       	push	r28
+ 53a:	df 93       	push	r29
+ 53c:	00 d0       	rcall	.+0      	; 0x53e <ccp_write_io+0x6>
+ 53e:	1f 92       	push	r1
+ 540:	cd b7       	in	r28, 0x3d	; 61
+ 542:	de b7       	in	r29, 0x3e	; 62
+ 544:	89 83       	std	Y+1, r24	; 0x01
+ 546:	9a 83       	std	Y+2, r25	; 0x02
+ 548:	6b 83       	std	Y+3, r22	; 0x03
+ 54a:	89 81       	ldd	r24, Y+1	; 0x01
+ 54c:	9a 81       	ldd	r25, Y+2	; 0x02
+ 54e:	4b 81       	ldd	r20, Y+3	; 0x03
+ 550:	68 ed       	ldi	r22, 0xD8	; 216
+ 552:	0e 94 99 04 	call	0x932	; 0x932 <protected_write_io>
+ 556:	23 96       	adiw	r28, 0x03	; 3
+ 558:	cd bf       	out	0x3d, r28	; 61
+ 55a:	de bf       	out	0x3e, r29	; 62
+ 55c:	df 91       	pop	r29
+ 55e:	cf 91       	pop	r28
+ 560:	08 95       	ret
+
+00000562 <device_init>:
+
+void device_init()
+{
+ 562:	cf 93       	push	r28
+ 564:	df 93       	push	r29
+ 566:	cd b7       	in	r28, 0x3d	; 61
+ 568:	de b7       	in	r29, 0x3e	; 62
+}
+ 56a:	df 91       	pop	r29
+ 56c:	cf 91       	pop	r28
+ 56e:	08 95       	ret
+
+00000570 <reset>:
+
+void reset()
+{
+ 570:	cf 93       	push	r28
+ 572:	df 93       	push	r29
+ 574:	cd b7       	in	r28, 0x3d	; 61
+ 576:	de b7       	in	r29, 0x3e	; 62
+	ccp_write_io((void *)&RSTCTRL.SWRR, RSTCTRL_SWRE_bm);
+ 578:	61 e0       	ldi	r22, 0x01	; 1
+ 57a:	81 e4       	ldi	r24, 0x41	; 65
+ 57c:	90 e0       	ldi	r25, 0x00	; 0
+ 57e:	0e 94 9c 02 	call	0x538	; 0x538 <ccp_write_io>
+}
+ 582:	df 91       	pop	r29
+ 584:	cf 91       	pop	r28
+ 586:	08 95       	ret
+
+00000588 <PORTB_set_pin_pull_mode>:
+ *
+ * \param[in] pin       The pin number within port
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void PORTB_set_pin_pull_mode(const uint8_t pin, const enum port_pull_mode pull_mode)
+{
+ 588:	cf 93       	push	r28
+ 58a:	df 93       	push	r29
+ 58c:	00 d0       	rcall	.+0      	; 0x58e <PORTB_set_pin_pull_mode+0x6>
+ 58e:	00 d0       	rcall	.+0      	; 0x590 <PORTB_set_pin_pull_mode+0x8>
+ 590:	cd b7       	in	r28, 0x3d	; 61
+ 592:	de b7       	in	r29, 0x3e	; 62
+ 594:	8b 83       	std	Y+3, r24	; 0x03
+ 596:	6c 83       	std	Y+4, r22	; 0x04
+	volatile uint8_t *port_pin_ctrl = ((uint8_t *)&PORTB + 0x10 + pin);
+ 598:	8b 81       	ldd	r24, Y+3	; 0x03
+ 59a:	88 2f       	mov	r24, r24
+ 59c:	90 e0       	ldi	r25, 0x00	; 0
+ 59e:	80 5d       	subi	r24, 0xD0	; 208
+ 5a0:	9b 4f       	sbci	r25, 0xFB	; 251
+ 5a2:	89 83       	std	Y+1, r24	; 0x01
+ 5a4:	9a 83       	std	Y+2, r25	; 0x02
+
+	if (pull_mode == PORT_PULL_UP) {
+ 5a6:	8c 81       	ldd	r24, Y+4	; 0x04
+ 5a8:	81 30       	cpi	r24, 0x01	; 1
+ 5aa:	59 f4       	brne	.+22     	; 0x5c2 <PORTB_set_pin_pull_mode+0x3a>
+		*port_pin_ctrl |= PORT_PULLUPEN_bm;
+ 5ac:	89 81       	ldd	r24, Y+1	; 0x01
+ 5ae:	9a 81       	ldd	r25, Y+2	; 0x02
+ 5b0:	fc 01       	movw	r30, r24
+ 5b2:	80 81       	ld	r24, Z
+ 5b4:	28 2f       	mov	r18, r24
+ 5b6:	28 60       	ori	r18, 0x08	; 8
+ 5b8:	89 81       	ldd	r24, Y+1	; 0x01
+ 5ba:	9a 81       	ldd	r25, Y+2	; 0x02
+ 5bc:	fc 01       	movw	r30, r24
+ 5be:	20 83       	st	Z, r18
+ 5c0:	0d c0       	rjmp	.+26     	; 0x5dc <PORTB_set_pin_pull_mode+0x54>
+	} else if (pull_mode == PORT_PULL_OFF) {
+ 5c2:	8c 81       	ldd	r24, Y+4	; 0x04
+ 5c4:	88 23       	and	r24, r24
+ 5c6:	51 f4       	brne	.+20     	; 0x5dc <PORTB_set_pin_pull_mode+0x54>
+		*port_pin_ctrl &= ~PORT_PULLUPEN_bm;
+ 5c8:	89 81       	ldd	r24, Y+1	; 0x01
+ 5ca:	9a 81       	ldd	r25, Y+2	; 0x02
+ 5cc:	fc 01       	movw	r30, r24
+ 5ce:	80 81       	ld	r24, Z
+ 5d0:	28 2f       	mov	r18, r24
+ 5d2:	27 7f       	andi	r18, 0xF7	; 247
+ 5d4:	89 81       	ldd	r24, Y+1	; 0x01
+ 5d6:	9a 81       	ldd	r25, Y+2	; 0x02
+ 5d8:	fc 01       	movw	r30, r24
+ 5da:	20 83       	st	Z, r18
+	}
+}
+ 5dc:	24 96       	adiw	r28, 0x04	; 4
+ 5de:	cd bf       	out	0x3d, r28	; 61
+ 5e0:	de bf       	out	0x3e, r29	; 62
+ 5e2:	df 91       	pop	r29
+ 5e4:	cf 91       	pop	r28
+ 5e6:	08 95       	ret
+
+000005e8 <PORTB_set_pin_dir>:
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void PORTB_set_pin_dir(const uint8_t pin, const enum port_dir dir)
+{
+ 5e8:	cf 93       	push	r28
+ 5ea:	df 93       	push	r29
+ 5ec:	00 d0       	rcall	.+0      	; 0x5ee <PORTB_set_pin_dir+0x6>
+ 5ee:	cd b7       	in	r28, 0x3d	; 61
+ 5f0:	de b7       	in	r29, 0x3e	; 62
+ 5f2:	89 83       	std	Y+1, r24	; 0x01
+ 5f4:	6a 83       	std	Y+2, r22	; 0x02
+	switch (dir) {
+ 5f6:	8a 81       	ldd	r24, Y+2	; 0x02
+ 5f8:	88 2f       	mov	r24, r24
+ 5fa:	90 e0       	ldi	r25, 0x00	; 0
+ 5fc:	81 30       	cpi	r24, 0x01	; 1
+ 5fe:	91 05       	cpc	r25, r1
+ 600:	e1 f0       	breq	.+56     	; 0x63a <PORTB_set_pin_dir+0x52>
+ 602:	82 30       	cpi	r24, 0x02	; 2
+ 604:	91 05       	cpc	r25, r1
+ 606:	71 f1       	breq	.+92     	; 0x664 <PORTB_set_pin_dir+0x7c>
+ 608:	89 2b       	or	r24, r25
+ 60a:	09 f0       	breq	.+2      	; 0x60e <PORTB_set_pin_dir+0x26>
+		break;
+	case PORT_DIR_OFF:
+		*((uint8_t *)&PORTB + 0x10 + pin) |= 1 << PORT_PULLUPEN_bp;
+		break;
+	default:
+		break;
+ 60c:	3b c0       	rjmp	.+118    	; 0x684 <PORTB_set_pin_dir+0x9c>
+ */
+static inline void PORTB_set_pin_dir(const uint8_t pin, const enum port_dir dir)
+{
+	switch (dir) {
+	case PORT_DIR_IN:
+		VPORTB.DIR &= ~(1 << pin);
+ 60e:	84 e0       	ldi	r24, 0x04	; 4
+ 610:	90 e0       	ldi	r25, 0x00	; 0
+ 612:	24 e0       	ldi	r18, 0x04	; 4
+ 614:	30 e0       	ldi	r19, 0x00	; 0
+ 616:	f9 01       	movw	r30, r18
+ 618:	20 81       	ld	r18, Z
+ 61a:	62 2f       	mov	r22, r18
+ 61c:	29 81       	ldd	r18, Y+1	; 0x01
+ 61e:	42 2f       	mov	r20, r18
+ 620:	50 e0       	ldi	r21, 0x00	; 0
+ 622:	21 e0       	ldi	r18, 0x01	; 1
+ 624:	30 e0       	ldi	r19, 0x00	; 0
+ 626:	02 c0       	rjmp	.+4      	; 0x62c <PORTB_set_pin_dir+0x44>
+ 628:	22 0f       	add	r18, r18
+ 62a:	33 1f       	adc	r19, r19
+ 62c:	4a 95       	dec	r20
+ 62e:	e2 f7       	brpl	.-8      	; 0x628 <PORTB_set_pin_dir+0x40>
+ 630:	20 95       	com	r18
+ 632:	26 23       	and	r18, r22
+ 634:	fc 01       	movw	r30, r24
+ 636:	20 83       	st	Z, r18
+		break;
+ 638:	25 c0       	rjmp	.+74     	; 0x684 <PORTB_set_pin_dir+0x9c>
+	case PORT_DIR_OUT:
+		VPORTB.DIR |= (1 << pin);
+ 63a:	84 e0       	ldi	r24, 0x04	; 4
+ 63c:	90 e0       	ldi	r25, 0x00	; 0
+ 63e:	24 e0       	ldi	r18, 0x04	; 4
+ 640:	30 e0       	ldi	r19, 0x00	; 0
+ 642:	f9 01       	movw	r30, r18
+ 644:	20 81       	ld	r18, Z
+ 646:	62 2f       	mov	r22, r18
+ 648:	29 81       	ldd	r18, Y+1	; 0x01
+ 64a:	42 2f       	mov	r20, r18
+ 64c:	50 e0       	ldi	r21, 0x00	; 0
+ 64e:	21 e0       	ldi	r18, 0x01	; 1
+ 650:	30 e0       	ldi	r19, 0x00	; 0
+ 652:	02 c0       	rjmp	.+4      	; 0x658 <PORTB_set_pin_dir+0x70>
+ 654:	22 0f       	add	r18, r18
+ 656:	33 1f       	adc	r19, r19
+ 658:	4a 95       	dec	r20
+ 65a:	e2 f7       	brpl	.-8      	; 0x654 <PORTB_set_pin_dir+0x6c>
+ 65c:	26 2b       	or	r18, r22
+ 65e:	fc 01       	movw	r30, r24
+ 660:	20 83       	st	Z, r18
+		break;
+ 662:	10 c0       	rjmp	.+32     	; 0x684 <PORTB_set_pin_dir+0x9c>
+	case PORT_DIR_OFF:
+		*((uint8_t *)&PORTB + 0x10 + pin) |= 1 << PORT_PULLUPEN_bp;
+ 664:	89 81       	ldd	r24, Y+1	; 0x01
+ 666:	88 2f       	mov	r24, r24
+ 668:	90 e0       	ldi	r25, 0x00	; 0
+ 66a:	80 5d       	subi	r24, 0xD0	; 208
+ 66c:	9b 4f       	sbci	r25, 0xFB	; 251
+ 66e:	29 81       	ldd	r18, Y+1	; 0x01
+ 670:	22 2f       	mov	r18, r18
+ 672:	30 e0       	ldi	r19, 0x00	; 0
+ 674:	20 5d       	subi	r18, 0xD0	; 208
+ 676:	3b 4f       	sbci	r19, 0xFB	; 251
+ 678:	f9 01       	movw	r30, r18
+ 67a:	20 81       	ld	r18, Z
+ 67c:	28 60       	ori	r18, 0x08	; 8
+ 67e:	fc 01       	movw	r30, r24
+ 680:	20 83       	st	Z, r18
+		break;
+ 682:	00 00       	nop
+	default:
+		break;
+	}
+}
+ 684:	0f 90       	pop	r0
+ 686:	0f 90       	pop	r0
+ 688:	df 91       	pop	r29
+ 68a:	cf 91       	pop	r28
+ 68c:	08 95       	ret
+
+0000068e <PORTB_set_pin_level>:
+ * \param[in] pin       The pin number within port
+ * \param[in] level true  = Pin level set to "high" state
+ *                  false = Pin level set to "low" state
+ */
+static inline void PORTB_set_pin_level(const uint8_t pin, const bool level)
+{
+ 68e:	cf 93       	push	r28
+ 690:	df 93       	push	r29
+ 692:	00 d0       	rcall	.+0      	; 0x694 <PORTB_set_pin_level+0x6>
+ 694:	cd b7       	in	r28, 0x3d	; 61
+ 696:	de b7       	in	r29, 0x3e	; 62
+ 698:	89 83       	std	Y+1, r24	; 0x01
+ 69a:	6a 83       	std	Y+2, r22	; 0x02
+	if (level == true) {
+ 69c:	8a 81       	ldd	r24, Y+2	; 0x02
+ 69e:	88 23       	and	r24, r24
+ 6a0:	a9 f0       	breq	.+42     	; 0x6cc <PORTB_set_pin_level+0x3e>
+		VPORTB.OUT |= (1 << pin);
+ 6a2:	84 e0       	ldi	r24, 0x04	; 4
+ 6a4:	90 e0       	ldi	r25, 0x00	; 0
+ 6a6:	24 e0       	ldi	r18, 0x04	; 4
+ 6a8:	30 e0       	ldi	r19, 0x00	; 0
+ 6aa:	f9 01       	movw	r30, r18
+ 6ac:	21 81       	ldd	r18, Z+1	; 0x01
+ 6ae:	62 2f       	mov	r22, r18
+ 6b0:	29 81       	ldd	r18, Y+1	; 0x01
+ 6b2:	42 2f       	mov	r20, r18
+ 6b4:	50 e0       	ldi	r21, 0x00	; 0
+ 6b6:	21 e0       	ldi	r18, 0x01	; 1
+ 6b8:	30 e0       	ldi	r19, 0x00	; 0
+ 6ba:	02 c0       	rjmp	.+4      	; 0x6c0 <PORTB_set_pin_level+0x32>
+ 6bc:	22 0f       	add	r18, r18
+ 6be:	33 1f       	adc	r19, r19
+ 6c0:	4a 95       	dec	r20
+ 6c2:	e2 f7       	brpl	.-8      	; 0x6bc <PORTB_set_pin_level+0x2e>
+ 6c4:	26 2b       	or	r18, r22
+ 6c6:	fc 01       	movw	r30, r24
+ 6c8:	21 83       	std	Z+1, r18	; 0x01
+ 6ca:	15 c0       	rjmp	.+42     	; 0x6f6 <PORTB_set_pin_level+0x68>
+	} else {
+		VPORTB.OUT &= ~(1 << pin);
+ 6cc:	84 e0       	ldi	r24, 0x04	; 4
+ 6ce:	90 e0       	ldi	r25, 0x00	; 0
+ 6d0:	24 e0       	ldi	r18, 0x04	; 4
+ 6d2:	30 e0       	ldi	r19, 0x00	; 0
+ 6d4:	f9 01       	movw	r30, r18
+ 6d6:	21 81       	ldd	r18, Z+1	; 0x01
+ 6d8:	62 2f       	mov	r22, r18
+ 6da:	29 81       	ldd	r18, Y+1	; 0x01
+ 6dc:	42 2f       	mov	r20, r18
+ 6de:	50 e0       	ldi	r21, 0x00	; 0
+ 6e0:	21 e0       	ldi	r18, 0x01	; 1
+ 6e2:	30 e0       	ldi	r19, 0x00	; 0
+ 6e4:	02 c0       	rjmp	.+4      	; 0x6ea <PORTB_set_pin_level+0x5c>
+ 6e6:	22 0f       	add	r18, r18
+ 6e8:	33 1f       	adc	r19, r19
+ 6ea:	4a 95       	dec	r20
+ 6ec:	e2 f7       	brpl	.-8      	; 0x6e6 <PORTB_set_pin_level+0x58>
+ 6ee:	20 95       	com	r18
+ 6f0:	26 23       	and	r18, r22
+ 6f2:	fc 01       	movw	r30, r24
+ 6f4:	21 83       	std	Z+1, r18	; 0x01
+	}
+}
+ 6f6:	0f 90       	pop	r0
+ 6f8:	0f 90       	pop	r0
+ 6fa:	df 91       	pop	r29
+ 6fc:	cf 91       	pop	r28
+ 6fe:	08 95       	ret
+
+00000700 <PB2_set_dir>:
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void PB2_set_dir(const enum port_dir dir)
+{
+ 700:	cf 93       	push	r28
+ 702:	df 93       	push	r29
+ 704:	1f 92       	push	r1
+ 706:	cd b7       	in	r28, 0x3d	; 61
+ 708:	de b7       	in	r29, 0x3e	; 62
+ 70a:	89 83       	std	Y+1, r24	; 0x01
+	PORTB_set_pin_dir(2, dir);
+ 70c:	69 81       	ldd	r22, Y+1	; 0x01
+ 70e:	82 e0       	ldi	r24, 0x02	; 2
+ 710:	0e 94 f4 02 	call	0x5e8	; 0x5e8 <PORTB_set_pin_dir>
+}
+ 714:	0f 90       	pop	r0
+ 716:	df 91       	pop	r29
+ 718:	cf 91       	pop	r28
+ 71a:	08 95       	ret
+
+0000071c <PB2_set_level>:
+ *
+ * \param[in] level true  = Pin level set to "high" state
+ *                  false = Pin level set to "low" state
+ */
+static inline void PB2_set_level(const bool level)
+{
+ 71c:	cf 93       	push	r28
+ 71e:	df 93       	push	r29
+ 720:	1f 92       	push	r1
+ 722:	cd b7       	in	r28, 0x3d	; 61
+ 724:	de b7       	in	r29, 0x3e	; 62
+ 726:	89 83       	std	Y+1, r24	; 0x01
+	PORTB_set_pin_level(2, level);
+ 728:	69 81       	ldd	r22, Y+1	; 0x01
+ 72a:	82 e0       	ldi	r24, 0x02	; 2
+ 72c:	0e 94 47 03 	call	0x68e	; 0x68e <PORTB_set_pin_level>
+}
+ 730:	0f 90       	pop	r0
+ 732:	df 91       	pop	r29
+ 734:	cf 91       	pop	r28
+ 736:	08 95       	ret
+
+00000738 <PB3_set_pull_mode>:
+ * modes are defined by device used
+ *
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void PB3_set_pull_mode(const enum port_pull_mode pull_mode)
+{
+ 738:	cf 93       	push	r28
+ 73a:	df 93       	push	r29
+ 73c:	1f 92       	push	r1
+ 73e:	cd b7       	in	r28, 0x3d	; 61
+ 740:	de b7       	in	r29, 0x3e	; 62
+ 742:	89 83       	std	Y+1, r24	; 0x01
+	PORTB_set_pin_pull_mode(3, pull_mode);
+ 744:	69 81       	ldd	r22, Y+1	; 0x01
+ 746:	83 e0       	ldi	r24, 0x03	; 3
+ 748:	0e 94 c4 02 	call	0x588	; 0x588 <PORTB_set_pin_pull_mode>
+}
+ 74c:	0f 90       	pop	r0
+ 74e:	df 91       	pop	r29
+ 750:	cf 91       	pop	r28
+ 752:	08 95       	ret
+
+00000754 <PB3_set_dir>:
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void PB3_set_dir(const enum port_dir dir)
+{
+ 754:	cf 93       	push	r28
+ 756:	df 93       	push	r29
+ 758:	1f 92       	push	r1
+ 75a:	cd b7       	in	r28, 0x3d	; 61
+ 75c:	de b7       	in	r29, 0x3e	; 62
+ 75e:	89 83       	std	Y+1, r24	; 0x01
+	PORTB_set_pin_dir(3, dir);
+ 760:	69 81       	ldd	r22, Y+1	; 0x01
+ 762:	83 e0       	ldi	r24, 0x03	; 3
+ 764:	0e 94 f4 02 	call	0x5e8	; 0x5e8 <PORTB_set_pin_dir>
+}
+ 768:	0f 90       	pop	r0
+ 76a:	df 91       	pop	r29
+ 76c:	cf 91       	pop	r28
+ 76e:	08 95       	ret
+
+00000770 <hw_request_set_pull_mode>:
+ * modes are defined by device used
+ *
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void hw_request_set_pull_mode(const enum port_pull_mode pull_mode)
+{
+ 770:	cf 93       	push	r28
+ 772:	df 93       	push	r29
+ 774:	1f 92       	push	r1
+ 776:	cd b7       	in	r28, 0x3d	; 61
+ 778:	de b7       	in	r29, 0x3e	; 62
+ 77a:	89 83       	std	Y+1, r24	; 0x01
+	PORTB_set_pin_pull_mode(5, pull_mode);
+ 77c:	69 81       	ldd	r22, Y+1	; 0x01
+ 77e:	85 e0       	ldi	r24, 0x05	; 5
+ 780:	0e 94 c4 02 	call	0x588	; 0x588 <PORTB_set_pin_pull_mode>
+}
+ 784:	0f 90       	pop	r0
+ 786:	df 91       	pop	r29
+ 788:	cf 91       	pop	r28
+ 78a:	08 95       	ret
+
+0000078c <hw_request_set_dir>:
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void hw_request_set_dir(const enum port_dir dir)
+{
+ 78c:	cf 93       	push	r28
+ 78e:	df 93       	push	r29
+ 790:	1f 92       	push	r1
+ 792:	cd b7       	in	r28, 0x3d	; 61
+ 794:	de b7       	in	r29, 0x3e	; 62
+ 796:	89 83       	std	Y+1, r24	; 0x01
+	PORTB_set_pin_dir(5, dir);
+ 798:	69 81       	ldd	r22, Y+1	; 0x01
+ 79a:	85 e0       	ldi	r24, 0x05	; 5
+ 79c:	0e 94 f4 02 	call	0x5e8	; 0x5e8 <PORTB_set_pin_dir>
+}
+ 7a0:	0f 90       	pop	r0
+ 7a2:	df 91       	pop	r29
+ 7a4:	cf 91       	pop	r28
+ 7a6:	08 95       	ret
+
+000007a8 <ccp_write_io>:
+ * \note Using IAR Embedded workbench, the choice of memory model has an impact
+ *       on calling convention. The memory model is not visible to the
+ *       preprocessor, so it must be defined in the Assembler preprocessor directives.
+ */
+static inline void ccp_write_io(void *addr, uint8_t value)
+{
+ 7a8:	cf 93       	push	r28
+ 7aa:	df 93       	push	r29
+ 7ac:	00 d0       	rcall	.+0      	; 0x7ae <ccp_write_io+0x6>
+ 7ae:	1f 92       	push	r1
+ 7b0:	cd b7       	in	r28, 0x3d	; 61
+ 7b2:	de b7       	in	r29, 0x3e	; 62
+ 7b4:	89 83       	std	Y+1, r24	; 0x01
+ 7b6:	9a 83       	std	Y+2, r25	; 0x02
+ 7b8:	6b 83       	std	Y+3, r22	; 0x03
+	protected_write_io(addr, CCP_IOREG_gc, value);
+ 7ba:	89 81       	ldd	r24, Y+1	; 0x01
+ 7bc:	9a 81       	ldd	r25, Y+2	; 0x02
+ 7be:	4b 81       	ldd	r20, Y+3	; 0x03
+ 7c0:	68 ed       	ldi	r22, 0xD8	; 216
+ 7c2:	0e 94 99 04 	call	0x932	; 0x932 <protected_write_io>
+}
+ 7c6:	23 96       	adiw	r28, 0x03	; 3
+ 7c8:	cd bf       	out	0x3d, r28	; 61
+ 7ca:	de bf       	out	0x3e, r29	; 62
+ 7cc:	df 91       	pop	r29
+ 7ce:	cf 91       	pop	r28
+ 7d0:	08 95       	ret
+
+000007d2 <main>:
+#include "bootloader.h"
+
+int main(void) __attribute__((OS_main));
+
+int main(void)
+{
+ 7d2:	00 d0       	rcall	.+0      	; 0x7d4 <main+0x2>
+ 7d4:	1f 92       	push	r1
+ 7d6:	cd b7       	in	r28, 0x3d	; 61
+ 7d8:	de b7       	in	r29, 0x3e	; 62
+	// System init
+	/* Initializes MCU, drivers and middleware */
+	for (uint8_t i = 0; i < 8; i++) {
+ 7da:	19 82       	std	Y+1, r1	; 0x01
+ 7dc:	12 c0       	rjmp	.+36     	; 0x802 <main+0x30>
+		*((uint8_t *)&PORTA + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
+ 7de:	89 81       	ldd	r24, Y+1	; 0x01
+ 7e0:	88 2f       	mov	r24, r24
+ 7e2:	90 e0       	ldi	r25, 0x00	; 0
+ 7e4:	80 5f       	subi	r24, 0xF0	; 240
+ 7e6:	9b 4f       	sbci	r25, 0xFB	; 251
+ 7e8:	29 81       	ldd	r18, Y+1	; 0x01
+ 7ea:	22 2f       	mov	r18, r18
+ 7ec:	30 e0       	ldi	r19, 0x00	; 0
+ 7ee:	20 5f       	subi	r18, 0xF0	; 240
+ 7f0:	3b 4f       	sbci	r19, 0xFB	; 251
+ 7f2:	f9 01       	movw	r30, r18
+ 7f4:	20 81       	ld	r18, Z
+ 7f6:	28 60       	ori	r18, 0x08	; 8
+ 7f8:	fc 01       	movw	r30, r24
+ 7fa:	20 83       	st	Z, r18
+
+int main(void)
+{
+	// System init
+	/* Initializes MCU, drivers and middleware */
+	for (uint8_t i = 0; i < 8; i++) {
+ 7fc:	89 81       	ldd	r24, Y+1	; 0x01
+ 7fe:	8f 5f       	subi	r24, 0xFF	; 255
+ 800:	89 83       	std	Y+1, r24	; 0x01
+ 802:	89 81       	ldd	r24, Y+1	; 0x01
+ 804:	88 30       	cpi	r24, 0x08	; 8
+ 806:	58 f3       	brcs	.-42     	; 0x7de <main+0xc>
+		*((uint8_t *)&PORTA + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
+	}
+
+	for (uint8_t i = 0; i < 8; i++) {
+ 808:	1a 82       	std	Y+2, r1	; 0x02
+ 80a:	12 c0       	rjmp	.+36     	; 0x830 <main+0x5e>
+		*((uint8_t *)&PORTB + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
+ 80c:	8a 81       	ldd	r24, Y+2	; 0x02
+ 80e:	88 2f       	mov	r24, r24
+ 810:	90 e0       	ldi	r25, 0x00	; 0
+ 812:	80 5d       	subi	r24, 0xD0	; 208
+ 814:	9b 4f       	sbci	r25, 0xFB	; 251
+ 816:	2a 81       	ldd	r18, Y+2	; 0x02
+ 818:	22 2f       	mov	r18, r18
+ 81a:	30 e0       	ldi	r19, 0x00	; 0
+ 81c:	20 5d       	subi	r18, 0xD0	; 208
+ 81e:	3b 4f       	sbci	r19, 0xFB	; 251
+ 820:	f9 01       	movw	r30, r18
+ 822:	20 81       	ld	r18, Z
+ 824:	28 60       	ori	r18, 0x08	; 8
+ 826:	fc 01       	movw	r30, r24
+ 828:	20 83       	st	Z, r18
+	/* Initializes MCU, drivers and middleware */
+	for (uint8_t i = 0; i < 8; i++) {
+		*((uint8_t *)&PORTA + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
+	}
+
+	for (uint8_t i = 0; i < 8; i++) {
+ 82a:	8a 81       	ldd	r24, Y+2	; 0x02
+ 82c:	8f 5f       	subi	r24, 0xFF	; 255
+ 82e:	8a 83       	std	Y+2, r24	; 0x02
+ 830:	8a 81       	ldd	r24, Y+2	; 0x02
+ 832:	88 30       	cpi	r24, 0x08	; 8
+ 834:	58 f3       	brcs	.-42     	; 0x80c <main+0x3a>
+		*((uint8_t *)&PORTB + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
+	}
+
+	for (uint8_t i = 0; i < 8; i++) {
+ 836:	1b 82       	std	Y+3, r1	; 0x03
+ 838:	12 c0       	rjmp	.+36     	; 0x85e <main+0x8c>
+		*((uint8_t *)&PORTC + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
+ 83a:	8b 81       	ldd	r24, Y+3	; 0x03
+ 83c:	88 2f       	mov	r24, r24
+ 83e:	90 e0       	ldi	r25, 0x00	; 0
+ 840:	80 5b       	subi	r24, 0xB0	; 176
+ 842:	9b 4f       	sbci	r25, 0xFB	; 251
+ 844:	2b 81       	ldd	r18, Y+3	; 0x03
+ 846:	22 2f       	mov	r18, r18
+ 848:	30 e0       	ldi	r19, 0x00	; 0
+ 84a:	20 5b       	subi	r18, 0xB0	; 176
+ 84c:	3b 4f       	sbci	r19, 0xFB	; 251
+ 84e:	f9 01       	movw	r30, r18
+ 850:	20 81       	ld	r18, Z
+ 852:	28 60       	ori	r18, 0x08	; 8
+ 854:	fc 01       	movw	r30, r24
+ 856:	20 83       	st	Z, r18
+
+	for (uint8_t i = 0; i < 8; i++) {
+		*((uint8_t *)&PORTB + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
+	}
+
+	for (uint8_t i = 0; i < 8; i++) {
+ 858:	8b 81       	ldd	r24, Y+3	; 0x03
+ 85a:	8f 5f       	subi	r24, 0xFF	; 255
+ 85c:	8b 83       	std	Y+3, r24	; 0x03
+ 85e:	8b 81       	ldd	r24, Y+3	; 0x03
+ 860:	88 30       	cpi	r24, 0x08	; 8
+ 862:	58 f3       	brcs	.-42     	; 0x83a <main+0x68>
+	}
+
+	/* PORT setting on PB5 */
+
+	// Set pin direction to input
+	hw_request_set_dir(PORT_DIR_IN);
+ 864:	80 e0       	ldi	r24, 0x00	; 0
+ 866:	0e 94 c6 03 	call	0x78c	; 0x78c <hw_request_set_dir>
+
+	hw_request_set_pull_mode(
+ 86a:	81 e0       	ldi	r24, 0x01	; 1
+ 86c:	0e 94 b8 03 	call	0x770	; 0x770 <hw_request_set_pull_mode>
+	    // <y> Pull configuration
+	    // <id> pad_pull_config
+	    // <PORT_PULL_OFF"> Off
+	    // <PORT_PULL_UP"> Pull-up
+	    PORT_PULL_UP);
+	ccp_write_io((void *)&(CLKCTRL.MCLKCTRLB), CLKCTRL_PDIV_6X_gc | 1 << CLKCTRL_PEN_bp); /* Prescaler enable, div 8 */
+ 870:	61 e1       	ldi	r22, 0x11	; 17
+ 872:	81 e6       	ldi	r24, 0x61	; 97
+ 874:	90 e0       	ldi	r25, 0x00	; 0
+ 876:	0e 94 d4 03 	call	0x7a8	; 0x7a8 <ccp_write_io>
+
+	//USART_0_initialization
+	// Set pin direction to input
+	PB3_set_dir(PORT_DIR_IN);
+ 87a:	80 e0       	ldi	r24, 0x00	; 0
+ 87c:	0e 94 aa 03 	call	0x754	; 0x754 <PB3_set_dir>
+
+	PB3_set_pull_mode(
+ 880:	81 e0       	ldi	r24, 0x01	; 1
+ 882:	0e 94 9c 03 	call	0x738	; 0x738 <PB3_set_pull_mode>
+	    // <PORT_PULL_OFF"> Off
+	    // <PORT_PULL_UP"> Pull-up
+	    PORT_PULL_UP);
+
+	// Set pin direction to output
+	PB2_set_dir(PORT_DIR_OUT);
+ 886:	81 e0       	ldi	r24, 0x01	; 1
+ 888:	0e 94 80 03 	call	0x700	; 0x700 <PB2_set_dir>
+
+	PORTB_set_pin_level(1, true);
+ 88c:	61 e0       	ldi	r22, 0x01	; 1
+ 88e:	81 e0       	ldi	r24, 0x01	; 1
+ 890:	0e 94 47 03 	call	0x68e	; 0x68e <PORTB_set_pin_level>
+	PORTB_set_pin_dir(1, PORT_DIR_OUT);
+ 894:	61 e0       	ldi	r22, 0x01	; 1
+ 896:	81 e0       	ldi	r24, 0x01	; 1
+ 898:	0e 94 f4 02 	call	0x5e8	; 0x5e8 <PORTB_set_pin_dir>
+	PB2_set_level(
+ 89c:	81 e0       	ldi	r24, 0x01	; 1
+ 89e:	0e 94 8e 03 	call	0x71c	; 0x71c <PB2_set_level>
+	// <false"> Low
+	// <true"> High
+	true);
+
+
+	USART_0_init();
+ 8a2:	0e 94 a5 04 	call	0x94a	; 0x94a <USART_0_init>
+	
+	// End USART init
+
+	FLASH_0_init();
+ 8a6:	0e 94 80 04 	call	0x900	; 0x900 <FLASH_0_init>
+
+	SLPCTRL_init();
+ 8aa:	0e 94 9d 04 	call	0x93a	; 0x93a <SLPCTRL_init>
+
+	BOD_init();
+ 8ae:	0e 94 63 04 	call	0x8c6	; 0x8c6 <BOD_init>
+
+	// End system init
+
+	init_bootloader();
+ 8b2:	0e 94 75 00 	call	0xea	; 0xea <init_bootloader>
+
+	bootloader();
+ 8b6:	0e 94 7e 00 	call	0xfc	; 0xfc <bootloader>
+
+	return 1;
+ 8ba:	81 e0       	ldi	r24, 0x01	; 1
+ 8bc:	90 e0       	ldi	r25, 0x00	; 0
+}
+ 8be:	23 96       	adiw	r28, 0x03	; 3
+ 8c0:	cd bf       	out	0x3d, r28	; 61
+ 8c2:	de bf       	out	0x3e, r29	; 62
+ 8c4:	08 95       	ret
+
+000008c6 <BOD_init>:
+ * \brief Initialize Brownout Detector
+ *
+ * \return Initialization status.
+ */
+int8_t BOD_init()
+{
+ 8c6:	cf 93       	push	r28
+ 8c8:	df 93       	push	r29
+ 8ca:	cd b7       	in	r28, 0x3d	; 61
+ 8cc:	de b7       	in	r29, 0x3e	; 62
+	// BOD.INTCTRL = 0 << BOD_VLMIE_bp /* voltage level monitor interrrupt enable: disabled */
+	//		 | BOD_VLMCFG_ABOVE_gc; /* Interrupt when supply goes above VLM level */
+
+	// BOD.VLMCTRLA = BOD_VLMLVL_5ABOVE_gc; /* VLM threshold 5% above BOD level */
+
+	return 0;
+ 8ce:	80 e0       	ldi	r24, 0x00	; 0
+}
+ 8d0:	df 91       	pop	r29
+ 8d2:	cf 91       	pop	r28
+ 8d4:	08 95       	ret
+
+000008d6 <ccp_write_spm>:
+ */
+bool FLASH_0_is_eeprom_ready()
+{
+
+	return (NVMCTRL.STATUS & NVMCTRL_EEBUSY_bm);
+}
+ 8d6:	cf 93       	push	r28
+ 8d8:	df 93       	push	r29
+ 8da:	00 d0       	rcall	.+0      	; 0x8dc <ccp_write_spm+0x6>
+ 8dc:	1f 92       	push	r1
+ 8de:	cd b7       	in	r28, 0x3d	; 61
+ 8e0:	de b7       	in	r29, 0x3e	; 62
+ 8e2:	89 83       	std	Y+1, r24	; 0x01
+ 8e4:	9a 83       	std	Y+2, r25	; 0x02
+ 8e6:	6b 83       	std	Y+3, r22	; 0x03
+ 8e8:	89 81       	ldd	r24, Y+1	; 0x01
+ 8ea:	9a 81       	ldd	r25, Y+2	; 0x02
+ 8ec:	4b 81       	ldd	r20, Y+3	; 0x03
+ 8ee:	6d e9       	ldi	r22, 0x9D	; 157
+ 8f0:	0e 94 99 04 	call	0x932	; 0x932 <protected_write_io>
+ 8f4:	23 96       	adiw	r28, 0x03	; 3
+ 8f6:	cd bf       	out	0x3d, r28	; 61
+ 8f8:	de bf       	out	0x3e, r29	; 62
+ 8fa:	df 91       	pop	r29
+ 8fc:	cf 91       	pop	r28
+ 8fe:	08 95       	ret
+
+00000900 <FLASH_0_init>:
+ 900:	cf 93       	push	r28
+ 902:	df 93       	push	r29
+ 904:	cd b7       	in	r28, 0x3d	; 61
+ 906:	de b7       	in	r29, 0x3e	; 62
+ 908:	80 e0       	ldi	r24, 0x00	; 0
+ 90a:	df 91       	pop	r29
+ 90c:	cf 91       	pop	r28
+ 90e:	08 95       	ret
+
+00000910 <FLASH_0_read_eeprom_byte>:
+ 910:	cf 93       	push	r28
+ 912:	df 93       	push	r29
+ 914:	00 d0       	rcall	.+0      	; 0x916 <FLASH_0_read_eeprom_byte+0x6>
+ 916:	cd b7       	in	r28, 0x3d	; 61
+ 918:	de b7       	in	r29, 0x3e	; 62
+ 91a:	89 83       	std	Y+1, r24	; 0x01
+ 91c:	9a 83       	std	Y+2, r25	; 0x02
+ 91e:	89 81       	ldd	r24, Y+1	; 0x01
+ 920:	9a 81       	ldd	r25, Y+2	; 0x02
+ 922:	9c 5e       	subi	r25, 0xEC	; 236
+ 924:	fc 01       	movw	r30, r24
+ 926:	80 81       	ld	r24, Z
+ 928:	0f 90       	pop	r0
+ 92a:	0f 90       	pop	r0
+ 92c:	df 91       	pop	r29
+ 92e:	cf 91       	pop	r28
+ 930:	08 95       	ret
+
+00000932 <protected_write_io>:
+#if defined(__GNUC__)
+  
+#ifdef RAMPZ
+	out     _SFR_IO_ADDR(RAMPZ), r1         // Clear bits 23:16 of Z
+#endif
+	movw    r30, r24                // Load addr into Z
+ 932:	fc 01       	movw	r30, r24
+	out     CCP, r22                // Start CCP handshake
+ 934:	64 bf       	out	0x34, r22	; 52
+	st      Z, r20                  // Write value to I/O register
+ 936:	40 83       	st	Z, r20
+	ret                             // Return to caller
+ 938:	08 95       	ret
+
+0000093a <SLPCTRL_init>:
+ * \brief Initialize Sleep Controller
+ *
+ * \return Initialization status.
+ */
+int8_t SLPCTRL_init()
+{
+ 93a:	cf 93       	push	r28
+ 93c:	df 93       	push	r29
+ 93e:	cd b7       	in	r28, 0x3d	; 61
+ 940:	de b7       	in	r29, 0x3e	; 62
+
+	// SLPCTRL.CTRLA = 0 << SLPCTRL_SEN_bp /* Sleep enable: disabled */
+	//		 | SLPCTRL_SMODE_IDLE_gc; /* Idle mode */
+
+	return 0;
+ 942:	80 e0       	ldi	r24, 0x00	; 0
+}
+ 944:	df 91       	pop	r29
+ 946:	cf 91       	pop	r28
+ 948:	08 95       	ret
+
+0000094a <USART_0_init>:
+ * \retval false Data completely shifted out if the USART shift register
+ */
+bool USART_0_is_tx_busy()
+{
+	return (!(USART0.STATUS & USART_TXCIF_bm));
+}
+ 94a:	cf 93       	push	r28
+ 94c:	df 93       	push	r29
+ 94e:	cd b7       	in	r28, 0x3d	; 61
+ 950:	de b7       	in	r29, 0x3e	; 62
+ 952:	80 e0       	ldi	r24, 0x00	; 0
+ 954:	98 e0       	ldi	r25, 0x08	; 8
+ 956:	24 e5       	ldi	r18, 0x54	; 84
+ 958:	34 e0       	ldi	r19, 0x04	; 4
+ 95a:	fc 01       	movw	r30, r24
+ 95c:	20 87       	std	Z+8, r18	; 0x08
+ 95e:	31 87       	std	Z+9, r19	; 0x09
+ 960:	80 e0       	ldi	r24, 0x00	; 0
+ 962:	98 e0       	ldi	r25, 0x08	; 8
+ 964:	20 ec       	ldi	r18, 0xC0	; 192
+ 966:	fc 01       	movw	r30, r24
+ 968:	26 83       	std	Z+6, r18	; 0x06
+ 96a:	80 e0       	ldi	r24, 0x00	; 0
+ 96c:	df 91       	pop	r29
+ 96e:	cf 91       	pop	r28
+ 970:	08 95       	ret
+
+00000972 <USART_0_read>:
+ * Function will block if a character is not available.
+ *
+ * \return Data read from the USART_0 module
+ */
+uint8_t USART_0_read()
+{
+ 972:	cf 93       	push	r28
+ 974:	df 93       	push	r29
+ 976:	cd b7       	in	r28, 0x3d	; 61
+ 978:	de b7       	in	r29, 0x3e	; 62
+	while (!(USART0.STATUS & USART_RXCIF_bm))
+ 97a:	00 00       	nop
+ 97c:	80 e0       	ldi	r24, 0x00	; 0
+ 97e:	98 e0       	ldi	r25, 0x08	; 8
+ 980:	fc 01       	movw	r30, r24
+ 982:	84 81       	ldd	r24, Z+4	; 0x04
+ 984:	88 23       	and	r24, r24
+ 986:	d4 f7       	brge	.-12     	; 0x97c <USART_0_read+0xa>
+		;
+	return USART0.RXDATAL;
+ 988:	80 e0       	ldi	r24, 0x00	; 0
+ 98a:	98 e0       	ldi	r25, 0x08	; 8
+ 98c:	fc 01       	movw	r30, r24
+ 98e:	80 81       	ld	r24, Z
+}
+ 990:	df 91       	pop	r29
+ 992:	cf 91       	pop	r28
+ 994:	08 95       	ret
+
+00000996 <USART_0_write>:
+ * \param[in] data The character to write to the USART
+ *
+ * \return Nothing
+ */
+void USART_0_write(const uint8_t data)
+{
+ 996:	cf 93       	push	r28
+ 998:	df 93       	push	r29
+ 99a:	1f 92       	push	r1
+ 99c:	cd b7       	in	r28, 0x3d	; 61
+ 99e:	de b7       	in	r29, 0x3e	; 62
+ 9a0:	89 83       	std	Y+1, r24	; 0x01
+	uint8_t dummy;
+	while (!(USART0.STATUS & USART_DREIF_bm))
+ 9a2:	00 00       	nop
+ 9a4:	80 e0       	ldi	r24, 0x00	; 0
+ 9a6:	98 e0       	ldi	r25, 0x08	; 8
+ 9a8:	fc 01       	movw	r30, r24
+ 9aa:	84 81       	ldd	r24, Z+4	; 0x04
+ 9ac:	88 2f       	mov	r24, r24
+ 9ae:	90 e0       	ldi	r25, 0x00	; 0
+ 9b0:	80 72       	andi	r24, 0x20	; 32
+ 9b2:	99 27       	eor	r25, r25
+ 9b4:	89 2b       	or	r24, r25
+ 9b6:	b1 f3       	breq	.-20     	; 0x9a4 <USART_0_write+0xe>
+		;
+	USART0.STATUS |= USART_TXCIF_bm; // Clear TXC flag	
+ 9b8:	80 e0       	ldi	r24, 0x00	; 0
+ 9ba:	98 e0       	ldi	r25, 0x08	; 8
+ 9bc:	20 e0       	ldi	r18, 0x00	; 0
+ 9be:	38 e0       	ldi	r19, 0x08	; 8
+ 9c0:	f9 01       	movw	r30, r18
+ 9c2:	24 81       	ldd	r18, Z+4	; 0x04
+ 9c4:	20 64       	ori	r18, 0x40	; 64
+ 9c6:	fc 01       	movw	r30, r24
+ 9c8:	24 83       	std	Z+4, r18	; 0x04
+	USART0.CTRLB &= ~(USART_RXEN_bm);
+ 9ca:	80 e0       	ldi	r24, 0x00	; 0
+ 9cc:	98 e0       	ldi	r25, 0x08	; 8
+ 9ce:	20 e0       	ldi	r18, 0x00	; 0
+ 9d0:	38 e0       	ldi	r19, 0x08	; 8
+ 9d2:	f9 01       	movw	r30, r18
+ 9d4:	26 81       	ldd	r18, Z+6	; 0x06
+ 9d6:	2f 77       	andi	r18, 0x7F	; 127
+ 9d8:	fc 01       	movw	r30, r24
+ 9da:	26 83       	std	Z+6, r18	; 0x06
+	USART0.TXDATAL = data;
+ 9dc:	80 e0       	ldi	r24, 0x00	; 0
+ 9de:	98 e0       	ldi	r25, 0x08	; 8
+ 9e0:	29 81       	ldd	r18, Y+1	; 0x01
+ 9e2:	fc 01       	movw	r30, r24
+ 9e4:	22 83       	std	Z+2, r18	; 0x02
+	while (!(USART0.STATUS & USART_TXCIF_bm))
+ 9e6:	00 00       	nop
+ 9e8:	80 e0       	ldi	r24, 0x00	; 0
+ 9ea:	98 e0       	ldi	r25, 0x08	; 8
+ 9ec:	fc 01       	movw	r30, r24
+ 9ee:	84 81       	ldd	r24, Z+4	; 0x04
+ 9f0:	88 2f       	mov	r24, r24
+ 9f2:	90 e0       	ldi	r25, 0x00	; 0
+ 9f4:	80 74       	andi	r24, 0x40	; 64
+ 9f6:	99 27       	eor	r25, r25
+ 9f8:	89 2b       	or	r24, r25
+ 9fa:	b1 f3       	breq	.-20     	; 0x9e8 <USART_0_write+0x52>
+		;
+	USART0.CTRLB |= USART_RXEN_bm;	
+ 9fc:	80 e0       	ldi	r24, 0x00	; 0
+ 9fe:	98 e0       	ldi	r25, 0x08	; 8
+ a00:	20 e0       	ldi	r18, 0x00	; 0
+ a02:	38 e0       	ldi	r19, 0x08	; 8
+ a04:	f9 01       	movw	r30, r18
+ a06:	26 81       	ldd	r18, Z+6	; 0x06
+ a08:	20 68       	ori	r18, 0x80	; 128
+ a0a:	fc 01       	movw	r30, r24
+ a0c:	26 83       	std	Z+6, r18	; 0x06
+}
+ a0e:	0f 90       	pop	r0
+ a10:	df 91       	pop	r29
+ a12:	cf 91       	pop	r28
+ a14:	08 95       	ret
+
+00000a16 <__tablejump2__>:
+ a16:	ee 0f       	add	r30, r30
+ a18:	ff 1f       	adc	r31, r31
+ a1a:	05 90       	lpm	r0, Z+
+ a1c:	f4 91       	lpm	r31, Z
+ a1e:	e0 2d       	mov	r30, r0
+ a20:	09 94       	ijmp
+
+00000a22 <memcpy>:
+ a22:	fb 01       	movw	r30, r22
+ a24:	dc 01       	movw	r26, r24
+ a26:	02 c0       	rjmp	.+4      	; 0xa2c <memcpy+0xa>
+ a28:	01 90       	ld	r0, Z+
+ a2a:	0d 92       	st	X+, r0
+ a2c:	41 50       	subi	r20, 0x01	; 1
+ a2e:	50 40       	sbci	r21, 0x00	; 0
+ a30:	d8 f7       	brcc	.-10     	; 0xa28 <memcpy+0x6>
+ a32:	08 95       	ret
+
+00000a34 <_exit>:
+ a34:	f8 94       	cli
+
+00000a36 <__stop_program>:
+ a36:	ff cf       	rjmp	.-2      	; 0xa36 <__stop_program>
+
+Disassembly of section .bootloader:
+
+00000a38 <FLASH_0_read_flash_byte>:
+ * \param[in] flash_adr The byte-address in flash to read from
+ *
+ * \return The read byte
+ */
+uint8_t FLASH_0_read_flash_byte(flash_adr_t flash_adr)
+{
+ a38:	cf 93       	push	r28
+ a3a:	df 93       	push	r29
+ a3c:	00 d0       	rcall	.+0      	; 0xa3e <FLASH_0_read_flash_byte+0x6>
+ a3e:	cd b7       	in	r28, 0x3d	; 61
+ a40:	de b7       	in	r29, 0x3e	; 62
+ a42:	89 83       	std	Y+1, r24	; 0x01
+ a44:	9a 83       	std	Y+2, r25	; 0x02
+
+	return *(uint8_t *)(MAPPED_PROGMEM_START + flash_adr);
+ a46:	89 81       	ldd	r24, Y+1	; 0x01
+ a48:	9a 81       	ldd	r25, Y+2	; 0x02
+ a4a:	90 58       	subi	r25, 0x80	; 128
+ a4c:	fc 01       	movw	r30, r24
+ a4e:	80 81       	ld	r24, Z
+}
+ a50:	0f 90       	pop	r0
+ a52:	0f 90       	pop	r0
+ a54:	df 91       	pop	r29
+ a56:	cf 91       	pop	r28
+ a58:	08 95       	ret
+
+00000a5a <FLASH_0_write_flash_byte>:
+ * \param[in] data The byte to write
+ *
+ * \return Status of the operation
+ */
+nvmctrl_status_t FLASH_0_write_flash_byte(flash_adr_t flash_adr, uint8_t *ram_buffer, uint8_t data)
+{
+ a5a:	cf 93       	push	r28
+ a5c:	df 93       	push	r29
+ a5e:	cd b7       	in	r28, 0x3d	; 61
+ a60:	de b7       	in	r29, 0x3e	; 62
+ a62:	28 97       	sbiw	r28, 0x08	; 8
+ a64:	cd bf       	out	0x3d, r28	; 61
+ a66:	de bf       	out	0x3e, r29	; 62
+ a68:	8c 83       	std	Y+4, r24	; 0x04
+ a6a:	9d 83       	std	Y+5, r25	; 0x05
+ a6c:	6e 83       	std	Y+6, r22	; 0x06
+ a6e:	7f 83       	std	Y+7, r23	; 0x07
+ a70:	48 87       	std	Y+8, r20	; 0x08
+
+	// Create a pointer to the start of the flash page containing the byte to write
+	volatile uint8_t *start_of_page = (uint8_t *)((MAPPED_PROGMEM_START + flash_adr) & ~(PROGMEM_PAGE_SIZE - 1));
+ a72:	8c 81       	ldd	r24, Y+4	; 0x04
+ a74:	9d 81       	ldd	r25, Y+5	; 0x05
+ a76:	90 58       	subi	r25, 0x80	; 128
+ a78:	80 7c       	andi	r24, 0xC0	; 192
+ a7a:	8a 83       	std	Y+2, r24	; 0x02
+ a7c:	9b 83       	std	Y+3, r25	; 0x03
+	uint8_t           i;
+
+	// Read contents of Flash page containing the target address to the page buffer
+	for (i = 0; i < PROGMEM_PAGE_SIZE; i++)
+ a7e:	19 82       	std	Y+1, r1	; 0x01
+ a80:	15 c0       	rjmp	.+42     	; 0xaac <FLASH_0_write_flash_byte+0x52>
+		start_of_page[i] = start_of_page[i];
+ a82:	89 81       	ldd	r24, Y+1	; 0x01
+ a84:	88 2f       	mov	r24, r24
+ a86:	90 e0       	ldi	r25, 0x00	; 0
+ a88:	2a 81       	ldd	r18, Y+2	; 0x02
+ a8a:	3b 81       	ldd	r19, Y+3	; 0x03
+ a8c:	82 0f       	add	r24, r18
+ a8e:	93 1f       	adc	r25, r19
+ a90:	29 81       	ldd	r18, Y+1	; 0x01
+ a92:	22 2f       	mov	r18, r18
+ a94:	30 e0       	ldi	r19, 0x00	; 0
+ a96:	4a 81       	ldd	r20, Y+2	; 0x02
+ a98:	5b 81       	ldd	r21, Y+3	; 0x03
+ a9a:	24 0f       	add	r18, r20
+ a9c:	35 1f       	adc	r19, r21
+ a9e:	f9 01       	movw	r30, r18
+ aa0:	20 81       	ld	r18, Z
+ aa2:	fc 01       	movw	r30, r24
+ aa4:	20 83       	st	Z, r18
+	// Create a pointer to the start of the flash page containing the byte to write
+	volatile uint8_t *start_of_page = (uint8_t *)((MAPPED_PROGMEM_START + flash_adr) & ~(PROGMEM_PAGE_SIZE - 1));
+	uint8_t           i;
+
+	// Read contents of Flash page containing the target address to the page buffer
+	for (i = 0; i < PROGMEM_PAGE_SIZE; i++)
+ aa6:	89 81       	ldd	r24, Y+1	; 0x01
+ aa8:	8f 5f       	subi	r24, 0xFF	; 255
+ aaa:	89 83       	std	Y+1, r24	; 0x01
+ aac:	89 81       	ldd	r24, Y+1	; 0x01
+ aae:	80 34       	cpi	r24, 0x40	; 64
+ ab0:	40 f3       	brcs	.-48     	; 0xa82 <FLASH_0_write_flash_byte+0x28>
+		start_of_page[i] = start_of_page[i];
+
+	// Write the new byte value to the correct address in the page buffer
+	*(uint8_t *)(MAPPED_PROGMEM_START + flash_adr) = data;
+ ab2:	8c 81       	ldd	r24, Y+4	; 0x04
+ ab4:	9d 81       	ldd	r25, Y+5	; 0x05
+ ab6:	90 58       	subi	r25, 0x80	; 128
+ ab8:	28 85       	ldd	r18, Y+8	; 0x08
+ aba:	fc 01       	movw	r30, r24
+ abc:	20 83       	st	Z, r18
+
+	// Erase and write the flash page
+	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_PAGEERASEWRITE_gc);
+ abe:	63 e0       	ldi	r22, 0x03	; 3
+ ac0:	80 e0       	ldi	r24, 0x00	; 0
+ ac2:	90 e1       	ldi	r25, 0x10	; 16
+ ac4:	0e 94 6b 04 	call	0x8d6	; 0x8d6 <ccp_write_spm>
+
+	if (NVMCTRL.STATUS & NVMCTRL_WRERROR_bm)
+ ac8:	80 e0       	ldi	r24, 0x00	; 0
+ aca:	90 e1       	ldi	r25, 0x10	; 16
+ acc:	fc 01       	movw	r30, r24
+ ace:	82 81       	ldd	r24, Z+2	; 0x02
+ ad0:	88 2f       	mov	r24, r24
+ ad2:	90 e0       	ldi	r25, 0x00	; 0
+ ad4:	84 70       	andi	r24, 0x04	; 4
+ ad6:	99 27       	eor	r25, r25
+ ad8:	89 2b       	or	r24, r25
+ ada:	11 f0       	breq	.+4      	; 0xae0 <FLASH_0_write_flash_byte+0x86>
+		return NVM_ERROR;
+ adc:	81 e0       	ldi	r24, 0x01	; 1
+ ade:	01 c0       	rjmp	.+2      	; 0xae2 <FLASH_0_write_flash_byte+0x88>
+	else
+		return NVM_OK;
+ ae0:	80 e0       	ldi	r24, 0x00	; 0
+}
+ ae2:	28 96       	adiw	r28, 0x08	; 8
+ ae4:	cd bf       	out	0x3d, r28	; 61
+ ae6:	de bf       	out	0x3e, r29	; 62
+ ae8:	df 91       	pop	r29
+ aea:	cf 91       	pop	r28
+ aec:	08 95       	ret
+
+00000aee <FLASH_0_erase_flash_page>:
+ * \param[in] flash_adr The byte-address in flash to erase. Must point to start-of-page.
+ *
+ * \return Status of the operation
+ */
+nvmctrl_status_t FLASH_0_erase_flash_page(flash_adr_t flash_adr)
+{
+ aee:	cf 93       	push	r28
+ af0:	df 93       	push	r29
+ af2:	00 d0       	rcall	.+0      	; 0xaf4 <FLASH_0_erase_flash_page+0x6>
+ af4:	00 d0       	rcall	.+0      	; 0xaf6 <FLASH_0_erase_flash_page+0x8>
+ af6:	cd b7       	in	r28, 0x3d	; 61
+ af8:	de b7       	in	r29, 0x3e	; 62
+ afa:	8b 83       	std	Y+3, r24	; 0x03
+ afc:	9c 83       	std	Y+4, r25	; 0x04
+
+	// Create a pointer in unified memory map to the page to erase
+	uint8_t *data_space = (uint8_t *)(MAPPED_PROGMEM_START + flash_adr);
+ afe:	8b 81       	ldd	r24, Y+3	; 0x03
+ b00:	9c 81       	ldd	r25, Y+4	; 0x04
+ b02:	90 58       	subi	r25, 0x80	; 128
+ b04:	89 83       	std	Y+1, r24	; 0x01
+ b06:	9a 83       	std	Y+2, r25	; 0x02
+
+	// Perform a dummy write to this address to update the address register in NVMCTL
+	*data_space = 0;
+ b08:	89 81       	ldd	r24, Y+1	; 0x01
+ b0a:	9a 81       	ldd	r25, Y+2	; 0x02
+ b0c:	fc 01       	movw	r30, r24
+ b0e:	10 82       	st	Z, r1
+
+	// Erase the flash page
+	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_PAGEERASE_gc);
+ b10:	62 e0       	ldi	r22, 0x02	; 2
+ b12:	80 e0       	ldi	r24, 0x00	; 0
+ b14:	90 e1       	ldi	r25, 0x10	; 16
+ b16:	0e 94 6b 04 	call	0x8d6	; 0x8d6 <ccp_write_spm>
+
+	if (NVMCTRL.STATUS & NVMCTRL_WRERROR_bm)
+ b1a:	80 e0       	ldi	r24, 0x00	; 0
+ b1c:	90 e1       	ldi	r25, 0x10	; 16
+ b1e:	fc 01       	movw	r30, r24
+ b20:	82 81       	ldd	r24, Z+2	; 0x02
+ b22:	88 2f       	mov	r24, r24
+ b24:	90 e0       	ldi	r25, 0x00	; 0
+ b26:	84 70       	andi	r24, 0x04	; 4
+ b28:	99 27       	eor	r25, r25
+ b2a:	89 2b       	or	r24, r25
+ b2c:	11 f0       	breq	.+4      	; 0xb32 <FLASH_0_erase_flash_page+0x44>
+		return NVM_ERROR;
+ b2e:	81 e0       	ldi	r24, 0x01	; 1
+ b30:	01 c0       	rjmp	.+2      	; 0xb34 <FLASH_0_erase_flash_page+0x46>
+	else
+		return NVM_OK;
+ b32:	80 e0       	ldi	r24, 0x00	; 0
+}
+ b34:	24 96       	adiw	r28, 0x04	; 4
+ b36:	cd bf       	out	0x3d, r28	; 61
+ b38:	de bf       	out	0x3e, r29	; 62
+ b3a:	df 91       	pop	r29
+ b3c:	cf 91       	pop	r28
+ b3e:	08 95       	ret
+
+00000b40 <FLASH_0_write_flash_page>:
+ * \param[in] data The data to write to the flash page
+ *
+ * \return Status of the operation
+ */
+nvmctrl_status_t FLASH_0_write_flash_page(flash_adr_t flash_adr, uint8_t *data)
+{
+ b40:	cf 93       	push	r28
+ b42:	df 93       	push	r29
+ b44:	cd b7       	in	r28, 0x3d	; 61
+ b46:	de b7       	in	r29, 0x3e	; 62
+ b48:	26 97       	sbiw	r28, 0x06	; 6
+ b4a:	cd bf       	out	0x3d, r28	; 61
+ b4c:	de bf       	out	0x3e, r29	; 62
+ b4e:	8b 83       	std	Y+3, r24	; 0x03
+ b50:	9c 83       	std	Y+4, r25	; 0x04
+ b52:	6d 83       	std	Y+5, r22	; 0x05
+ b54:	7e 83       	std	Y+6, r23	; 0x06
+
+	// Create a pointer in unified memory map to the page to write
+	uint8_t *data_space = (uint8_t *)(MAPPED_PROGMEM_START + flash_adr);
+ b56:	8b 81       	ldd	r24, Y+3	; 0x03
+ b58:	9c 81       	ldd	r25, Y+4	; 0x04
+ b5a:	90 58       	subi	r25, 0x80	; 128
+ b5c:	89 83       	std	Y+1, r24	; 0x01
+ b5e:	9a 83       	std	Y+2, r25	; 0x02
+
+	// Write data to the page buffer
+	memcpy(data_space, data, PROGMEM_PAGE_SIZE);
+ b60:	2d 81       	ldd	r18, Y+5	; 0x05
+ b62:	3e 81       	ldd	r19, Y+6	; 0x06
+ b64:	89 81       	ldd	r24, Y+1	; 0x01
+ b66:	9a 81       	ldd	r25, Y+2	; 0x02
+ b68:	40 e4       	ldi	r20, 0x40	; 64
+ b6a:	50 e0       	ldi	r21, 0x00	; 0
+ b6c:	b9 01       	movw	r22, r18
+ b6e:	0e 94 11 05 	call	0xa22	; 0xa22 <memcpy>
+
+	// Write the flash page
+	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_PAGEWRITE_gc);
+ b72:	61 e0       	ldi	r22, 0x01	; 1
+ b74:	80 e0       	ldi	r24, 0x00	; 0
+ b76:	90 e1       	ldi	r25, 0x10	; 16
+ b78:	0e 94 6b 04 	call	0x8d6	; 0x8d6 <ccp_write_spm>
+
+	if (NVMCTRL.STATUS & NVMCTRL_WRERROR_bm)
+ b7c:	80 e0       	ldi	r24, 0x00	; 0
+ b7e:	90 e1       	ldi	r25, 0x10	; 16
+ b80:	fc 01       	movw	r30, r24
+ b82:	82 81       	ldd	r24, Z+2	; 0x02
+ b84:	88 2f       	mov	r24, r24
+ b86:	90 e0       	ldi	r25, 0x00	; 0
+ b88:	84 70       	andi	r24, 0x04	; 4
+ b8a:	99 27       	eor	r25, r25
+ b8c:	89 2b       	or	r24, r25
+ b8e:	11 f0       	breq	.+4      	; 0xb94 <FLASH_0_write_flash_page+0x54>
+		return NVM_ERROR;
+ b90:	81 e0       	ldi	r24, 0x01	; 1
+ b92:	01 c0       	rjmp	.+2      	; 0xb96 <FLASH_0_write_flash_page+0x56>
+	else
+		return NVM_OK;
+ b94:	80 e0       	ldi	r24, 0x00	; 0
+}
+ b96:	26 96       	adiw	r28, 0x06	; 6
+ b98:	cd bf       	out	0x3d, r28	; 61
+ b9a:	de bf       	out	0x3e, r29	; 62
+ b9c:	df 91       	pop	r29
+ b9e:	cf 91       	pop	r28
+ ba0:	08 95       	ret
+
+00000ba2 <FLASH_0_write_flash_block>:
+ * \param[in] page_buffer A buffer in memory the size of a flash page, used as a scratchpad
+ *
+ * \return Status of the operation
+ */
+nvmctrl_status_t FLASH_0_write_flash_block(flash_adr_t flash_adr, uint8_t *data, size_t size, uint8_t *ram_buffer)
+{
+ ba2:	cf 93       	push	r28
+ ba4:	df 93       	push	r29
+ ba6:	cd b7       	in	r28, 0x3d	; 61
+ ba8:	de b7       	in	r29, 0x3e	; 62
+ baa:	2c 97       	sbiw	r28, 0x0c	; 12
+ bac:	cd bf       	out	0x3d, r28	; 61
+ bae:	de bf       	out	0x3e, r29	; 62
+ bb0:	8d 83       	std	Y+5, r24	; 0x05
+ bb2:	9e 83       	std	Y+6, r25	; 0x06
+ bb4:	6f 83       	std	Y+7, r22	; 0x07
+ bb6:	78 87       	std	Y+8, r23	; 0x08
+ bb8:	49 87       	std	Y+9, r20	; 0x09
+ bba:	5a 87       	std	Y+10, r21	; 0x0a
+ bbc:	2b 87       	std	Y+11, r18	; 0x0b
+ bbe:	3c 87       	std	Y+12, r19	; 0x0c
+
+	// Create a pointer in unified memory map to the start of first page to modify
+	volatile uint8_t *data_space   = (uint8_t *)((MAPPED_PROGMEM_START + flash_adr) & ~(PROGMEM_PAGE_SIZE - 1));
+ bc0:	8d 81       	ldd	r24, Y+5	; 0x05
+ bc2:	9e 81       	ldd	r25, Y+6	; 0x06
+ bc4:	90 58       	subi	r25, 0x80	; 128
+ bc6:	80 7c       	andi	r24, 0xC0	; 192
+ bc8:	89 83       	std	Y+1, r24	; 0x01
+ bca:	9a 83       	std	Y+2, r25	; 0x02
+	uint8_t           start_offset = flash_adr % PROGMEM_PAGE_SIZE;
+ bcc:	8d 81       	ldd	r24, Y+5	; 0x05
+ bce:	8f 73       	andi	r24, 0x3F	; 63
+ bd0:	8c 83       	std	Y+4, r24	; 0x04
+	uint8_t           i;
+
+	// Step 1:
+	// Fill page buffer with contents of first flash page to be written up
+	// to the first flash address to be replaced by the new contents
+	for (i = 0; i < start_offset; i++) {
+ bd2:	1b 82       	std	Y+3, r1	; 0x03
+ bd4:	10 c0       	rjmp	.+32     	; 0xbf6 <FLASH_0_write_flash_block+0x54>
+		*data_space = *data_space;
+ bd6:	89 81       	ldd	r24, Y+1	; 0x01
+ bd8:	9a 81       	ldd	r25, Y+2	; 0x02
+ bda:	fc 01       	movw	r30, r24
+ bdc:	20 81       	ld	r18, Z
+ bde:	89 81       	ldd	r24, Y+1	; 0x01
+ be0:	9a 81       	ldd	r25, Y+2	; 0x02
+ be2:	fc 01       	movw	r30, r24
+ be4:	20 83       	st	Z, r18
+		data_space++;
+ be6:	89 81       	ldd	r24, Y+1	; 0x01
+ be8:	9a 81       	ldd	r25, Y+2	; 0x02
+ bea:	01 96       	adiw	r24, 0x01	; 1
+ bec:	89 83       	std	Y+1, r24	; 0x01
+ bee:	9a 83       	std	Y+2, r25	; 0x02
+	uint8_t           i;
+
+	// Step 1:
+	// Fill page buffer with contents of first flash page to be written up
+	// to the first flash address to be replaced by the new contents
+	for (i = 0; i < start_offset; i++) {
+ bf0:	8b 81       	ldd	r24, Y+3	; 0x03
+ bf2:	8f 5f       	subi	r24, 0xFF	; 255
+ bf4:	8b 83       	std	Y+3, r24	; 0x03
+ bf6:	9b 81       	ldd	r25, Y+3	; 0x03
+ bf8:	8c 81       	ldd	r24, Y+4	; 0x04
+ bfa:	98 17       	cp	r25, r24
+ bfc:	60 f3       	brcs	.-40     	; 0xbd6 <FLASH_0_write_flash_block+0x34>
+
+	// Step 2:
+	// Write all of the new flash contents to the page buffer, writing the
+	// page buffer to flash every time the buffer contains a complete flash
+	// page.
+	while (size > 0) {
+ bfe:	2e c0       	rjmp	.+92     	; 0xc5c <FLASH_0_write_flash_block+0xba>
+		*data_space++ = *data++;
+ c00:	89 81       	ldd	r24, Y+1	; 0x01
+ c02:	9a 81       	ldd	r25, Y+2	; 0x02
+ c04:	9c 01       	movw	r18, r24
+ c06:	2f 5f       	subi	r18, 0xFF	; 255
+ c08:	3f 4f       	sbci	r19, 0xFF	; 255
+ c0a:	29 83       	std	Y+1, r18	; 0x01
+ c0c:	3a 83       	std	Y+2, r19	; 0x02
+ c0e:	2f 81       	ldd	r18, Y+7	; 0x07
+ c10:	38 85       	ldd	r19, Y+8	; 0x08
+ c12:	a9 01       	movw	r20, r18
+ c14:	4f 5f       	subi	r20, 0xFF	; 255
+ c16:	5f 4f       	sbci	r21, 0xFF	; 255
+ c18:	4f 83       	std	Y+7, r20	; 0x07
+ c1a:	58 87       	std	Y+8, r21	; 0x08
+ c1c:	f9 01       	movw	r30, r18
+ c1e:	20 81       	ld	r18, Z
+ c20:	fc 01       	movw	r30, r24
+ c22:	20 83       	st	Z, r18
+		size--;
+ c24:	89 85       	ldd	r24, Y+9	; 0x09
+ c26:	9a 85       	ldd	r25, Y+10	; 0x0a
+ c28:	01 97       	sbiw	r24, 0x01	; 1
+ c2a:	89 87       	std	Y+9, r24	; 0x09
+ c2c:	9a 87       	std	Y+10, r25	; 0x0a
+		if (((uintptr_t)data_space % PROGMEM_PAGE_SIZE) == 0) {
+ c2e:	89 81       	ldd	r24, Y+1	; 0x01
+ c30:	9a 81       	ldd	r25, Y+2	; 0x02
+ c32:	8f 73       	andi	r24, 0x3F	; 63
+ c34:	99 27       	eor	r25, r25
+ c36:	89 2b       	or	r24, r25
+ c38:	89 f4       	brne	.+34     	; 0xc5c <FLASH_0_write_flash_block+0xba>
+			// Erase and write the flash page
+			ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_PAGEERASEWRITE_gc);
+ c3a:	63 e0       	ldi	r22, 0x03	; 3
+ c3c:	80 e0       	ldi	r24, 0x00	; 0
+ c3e:	90 e1       	ldi	r25, 0x10	; 16
+ c40:	0e 94 6b 04 	call	0x8d6	; 0x8d6 <ccp_write_spm>
+			if (NVMCTRL.STATUS & NVMCTRL_WRERROR_bm)
+ c44:	80 e0       	ldi	r24, 0x00	; 0
+ c46:	90 e1       	ldi	r25, 0x10	; 16
+ c48:	fc 01       	movw	r30, r24
+ c4a:	82 81       	ldd	r24, Z+2	; 0x02
+ c4c:	88 2f       	mov	r24, r24
+ c4e:	90 e0       	ldi	r25, 0x00	; 0
+ c50:	84 70       	andi	r24, 0x04	; 4
+ c52:	99 27       	eor	r25, r25
+ c54:	89 2b       	or	r24, r25
+ c56:	11 f0       	breq	.+4      	; 0xc5c <FLASH_0_write_flash_block+0xba>
+				return NVM_ERROR;
+ c58:	81 e0       	ldi	r24, 0x01	; 1
+ c5a:	2b c0       	rjmp	.+86     	; 0xcb2 <FLASH_0_write_flash_block+0x110>
+
+	// Step 2:
+	// Write all of the new flash contents to the page buffer, writing the
+	// page buffer to flash every time the buffer contains a complete flash
+	// page.
+	while (size > 0) {
+ c5c:	89 85       	ldd	r24, Y+9	; 0x09
+ c5e:	9a 85       	ldd	r25, Y+10	; 0x0a
+ c60:	89 2b       	or	r24, r25
+ c62:	71 f6       	brne	.-100    	; 0xc00 <FLASH_0_write_flash_block+0x5e>
+	// part of the new data to write to flash. The remainder of the flash page
+	// shall be unaltered. Fill up the remainder
+	// of the page buffer with the original contents of the flash page, and do a
+	// final flash page write.
+	while (1) {
+		*data_space = *data_space;
+ c64:	89 81       	ldd	r24, Y+1	; 0x01
+ c66:	9a 81       	ldd	r25, Y+2	; 0x02
+ c68:	fc 01       	movw	r30, r24
+ c6a:	20 81       	ld	r18, Z
+ c6c:	89 81       	ldd	r24, Y+1	; 0x01
+ c6e:	9a 81       	ldd	r25, Y+2	; 0x02
+ c70:	fc 01       	movw	r30, r24
+ c72:	20 83       	st	Z, r18
+		data_space++;
+ c74:	89 81       	ldd	r24, Y+1	; 0x01
+ c76:	9a 81       	ldd	r25, Y+2	; 0x02
+ c78:	01 96       	adiw	r24, 0x01	; 1
+ c7a:	89 83       	std	Y+1, r24	; 0x01
+ c7c:	9a 83       	std	Y+2, r25	; 0x02
+		if (((uintptr_t)data_space % PROGMEM_PAGE_SIZE) == 0) {
+ c7e:	89 81       	ldd	r24, Y+1	; 0x01
+ c80:	9a 81       	ldd	r25, Y+2	; 0x02
+ c82:	8f 73       	andi	r24, 0x3F	; 63
+ c84:	99 27       	eor	r25, r25
+ c86:	89 2b       	or	r24, r25
+ c88:	99 f4       	brne	.+38     	; 0xcb0 <FLASH_0_write_flash_block+0x10e>
+			// Erase and write the last flash page
+			ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_PAGEERASEWRITE_gc);
+ c8a:	63 e0       	ldi	r22, 0x03	; 3
+ c8c:	80 e0       	ldi	r24, 0x00	; 0
+ c8e:	90 e1       	ldi	r25, 0x10	; 16
+ c90:	0e 94 6b 04 	call	0x8d6	; 0x8d6 <ccp_write_spm>
+			if (NVMCTRL.STATUS & NVMCTRL_WRERROR_bm)
+ c94:	80 e0       	ldi	r24, 0x00	; 0
+ c96:	90 e1       	ldi	r25, 0x10	; 16
+ c98:	fc 01       	movw	r30, r24
+ c9a:	82 81       	ldd	r24, Z+2	; 0x02
+ c9c:	88 2f       	mov	r24, r24
+ c9e:	90 e0       	ldi	r25, 0x00	; 0
+ ca0:	84 70       	andi	r24, 0x04	; 4
+ ca2:	99 27       	eor	r25, r25
+ ca4:	89 2b       	or	r24, r25
+ ca6:	11 f0       	breq	.+4      	; 0xcac <FLASH_0_write_flash_block+0x10a>
+				return NVM_ERROR;
+ ca8:	81 e0       	ldi	r24, 0x01	; 1
+ caa:	03 c0       	rjmp	.+6      	; 0xcb2 <FLASH_0_write_flash_block+0x110>
+			else
+				return NVM_OK;
+ cac:	80 e0       	ldi	r24, 0x00	; 0
+ cae:	01 c0       	rjmp	.+2      	; 0xcb2 <FLASH_0_write_flash_block+0x110>
+		}
+	}
+ cb0:	d9 cf       	rjmp	.-78     	; 0xc64 <FLASH_0_write_flash_block+0xc2>
+}
+ cb2:	2c 96       	adiw	r28, 0x0c	; 12
+ cb4:	cd bf       	out	0x3d, r28	; 61
+ cb6:	de bf       	out	0x3e, r29	; 62
+ cb8:	df 91       	pop	r29
+ cba:	cf 91       	pop	r28
+ cbc:	08 95       	ret
+
+00000cbe <FLASH_0_write_flash_stream>:
+ * \param[in] finalize Set to true for the final write to the buffer
+ *
+ * \return Status of the operation
+ */
+nvmctrl_status_t FLASH_0_write_flash_stream(flash_adr_t flash_adr, uint8_t data, bool finalize)
+{
+ cbe:	cf 93       	push	r28
+ cc0:	df 93       	push	r29
+ cc2:	cd b7       	in	r28, 0x3d	; 61
+ cc4:	de b7       	in	r29, 0x3e	; 62
+ cc6:	25 97       	sbiw	r28, 0x05	; 5
+ cc8:	cd bf       	out	0x3d, r28	; 61
+ cca:	de bf       	out	0x3e, r29	; 62
+ ccc:	8a 83       	std	Y+2, r24	; 0x02
+ cce:	9b 83       	std	Y+3, r25	; 0x03
+ cd0:	6c 83       	std	Y+4, r22	; 0x04
+ cd2:	4d 83       	std	Y+5, r20	; 0x05
+
+	bool final_adr_in_page = ((flash_adr & (PROGMEM_PAGE_SIZE - 1)) == (PROGMEM_PAGE_SIZE - 1));
+ cd4:	8a 81       	ldd	r24, Y+2	; 0x02
+ cd6:	9b 81       	ldd	r25, Y+3	; 0x03
+ cd8:	8f 73       	andi	r24, 0x3F	; 63
+ cda:	99 27       	eor	r25, r25
+ cdc:	21 e0       	ldi	r18, 0x01	; 1
+ cde:	cf 97       	sbiw	r24, 0x3f	; 63
+ ce0:	09 f0       	breq	.+2      	; 0xce4 <FLASH_0_write_flash_stream+0x26>
+ ce2:	20 e0       	ldi	r18, 0x00	; 0
+ ce4:	29 83       	std	Y+1, r18	; 0x01
+
+	// Write the new byte value to the correct address in the page buffer
+	*(uint8_t *)(MAPPED_PROGMEM_START + flash_adr) = data;
+ ce6:	8a 81       	ldd	r24, Y+2	; 0x02
+ ce8:	9b 81       	ldd	r25, Y+3	; 0x03
+ cea:	90 58       	subi	r25, 0x80	; 128
+ cec:	2c 81       	ldd	r18, Y+4	; 0x04
+ cee:	fc 01       	movw	r30, r24
+ cf0:	20 83       	st	Z, r18
+
+	if (final_adr_in_page || finalize)
+ cf2:	89 81       	ldd	r24, Y+1	; 0x01
+ cf4:	88 23       	and	r24, r24
+ cf6:	19 f4       	brne	.+6      	; 0xcfe <FLASH_0_write_flash_stream+0x40>
+ cf8:	8d 81       	ldd	r24, Y+5	; 0x05
+ cfa:	88 23       	and	r24, r24
+ cfc:	29 f0       	breq	.+10     	; 0xd08 <FLASH_0_write_flash_stream+0x4a>
+		// Erase and write the flash page
+		ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_PAGEERASEWRITE_gc);
+ cfe:	63 e0       	ldi	r22, 0x03	; 3
+ d00:	80 e0       	ldi	r24, 0x00	; 0
+ d02:	90 e1       	ldi	r25, 0x10	; 16
+ d04:	0e 94 6b 04 	call	0x8d6	; 0x8d6 <ccp_write_spm>
+
+	if (NVMCTRL.STATUS & NVMCTRL_WRERROR_bm)
+ d08:	80 e0       	ldi	r24, 0x00	; 0
+ d0a:	90 e1       	ldi	r25, 0x10	; 16
+ d0c:	fc 01       	movw	r30, r24
+ d0e:	82 81       	ldd	r24, Z+2	; 0x02
+ d10:	88 2f       	mov	r24, r24
+ d12:	90 e0       	ldi	r25, 0x00	; 0
+ d14:	84 70       	andi	r24, 0x04	; 4
+ d16:	99 27       	eor	r25, r25
+ d18:	89 2b       	or	r24, r25
+ d1a:	11 f0       	breq	.+4      	; 0xd20 <FLASH_0_write_flash_stream+0x62>
+		return NVM_ERROR;
+ d1c:	81 e0       	ldi	r24, 0x01	; 1
+ d1e:	01 c0       	rjmp	.+2      	; 0xd22 <FLASH_0_write_flash_stream+0x64>
+	else
+		return NVM_OK;
+ d20:	80 e0       	ldi	r24, 0x00	; 0
+}
+ d22:	25 96       	adiw	r28, 0x05	; 5
+ d24:	cd bf       	out	0x3d, r28	; 61
+ d26:	de bf       	out	0x3e, r29	; 62
+ d28:	df 91       	pop	r29
+ d2a:	cf 91       	pop	r28
+ d2c:	08 95       	ret
